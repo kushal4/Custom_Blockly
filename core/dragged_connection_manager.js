@@ -40,6 +40,7 @@ goog.require('goog.math.Coordinate');
  */
 Blockly.DraggedConnectionManager = function(block) {
   Blockly.selected = block;
+  console.log(block);
 
   /**
    * The top block in the stack being dragged.
@@ -131,6 +132,7 @@ Blockly.DraggedConnectionManager.prototype.wouldDeleteBlock = function() {
  */
 Blockly.DraggedConnectionManager.prototype.applyConnections = function() {
   if (this.closestConnection_) {
+   // console.log(this.closestConnection_);
     // Connect two blocks together.
     this.localConnection_.connect(this.closestConnection_);
     if (this.topBlock_.rendered) {
@@ -206,9 +208,11 @@ Blockly.DraggedConnectionManager.prototype.addHighlighting_ = function() {
  */
 Blockly.DraggedConnectionManager.prototype.initAvailableConnections_ = function() {
   var available = this.topBlock_.getConnections_(false);
+//console.log(available);
   // Also check the last connection on this stack
   var lastOnStack = this.topBlock_.lastConnectionInStack_();
-  if (lastOnStack && lastOnStack != this.topBlock_.nextConnection) {
+    //console.log(lastOnStack);
+  if (lastOnStack && lastOnStack !== this.topBlock_.nextConnection) {
     available.push(lastOnStack);
   }
   return available;
@@ -230,7 +234,10 @@ Blockly.DraggedConnectionManager.prototype.updateClosest_ = function(dxy) {
   for (var i = 0; i < this.availableConnections_.length; i++) {
     var myConnection = this.availableConnections_[i];
     var neighbour = myConnection.closest(this.radiusConnection_, dxy);
+//   console.log(myConnection);
+     // console.log(neighbour.connection);
     if (neighbour.connection) {
+
       this.closestConnection_ = neighbour.connection;
       this.localConnection_ = myConnection;
       this.radiusConnection_ = neighbour.radius;

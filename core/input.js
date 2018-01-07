@@ -41,7 +41,7 @@ goog.require('goog.asserts');
  * @constructor
  */
 Blockly.Input = function(type, name, block, connection) {
-  if (type != Blockly.DUMMY_INPUT && !name) {
+  if (type !== Blockly.DUMMY_INPUT && !name) {
     throw 'Value inputs and statement inputs must have non-empty name.';
   }
   /** @type {number} */
@@ -55,7 +55,7 @@ Blockly.Input = function(type, name, block, connection) {
   this.sourceBlock_ = block;
   /** @type {Blockly.Connection} */
   this.connection = connection;
- // console.log(this.connection);
+  //console.log(this.connection);
   /** @type {!Array.<!Blockly.Field>} */
   this.fieldRow = [];
 };
@@ -117,7 +117,7 @@ Blockly.Input.prototype.insertFieldAt = function(index, field, opt_name) {
 
   if (field.prefixField) {
     // Add any prefix.
-      console.log("the index to insert at is :-"+index);
+     // console.log("the index to insert at is :-"+index);
     index = this.insertFieldAt(index, field.prefixField);
   }
   // Add the field to the field row.

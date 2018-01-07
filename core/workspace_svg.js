@@ -855,6 +855,7 @@ Blockly.WorkspaceSvg.prototype.paste = function(xmlBlock) {
     this.currentGesture_.cancel();  // Dragging while pasting?  No.
   }
   Blockly.Events.disable();
+  console.log("called from workspace_svg.js");
   try {
     var block = Blockly.Xml.domToBlock(xmlBlock, this);
     // Move the duplicate to original position.
@@ -1111,7 +1112,7 @@ Blockly.WorkspaceSvg.prototype.getBlocksBoundingBox = function() {
 
   // Initialize boundary using the first block.
   var boundary = topBlocks[0].getBoundingRectangle();
-console.log(boundary);
+//console.log(boundary);
   // Start at 1 since the 0th block was used for initialization
   for (var i = 1; i < topBlocks.length; i++) {
     var blockBoundary = topBlocks[i].getBoundingRectangle();

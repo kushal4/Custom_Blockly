@@ -52,8 +52,9 @@ Blockly.Connection = function(source, type) {
    // console.log(source.workspace.connectionDBList[type]);
     this.dbOpposite_ =
         source.workspace.connectionDBList[Blockly.OPPOSITE_TYPE[type]];
-    console.log(source.workspace.connectionDBList[Blockly.OPPOSITE_TYPE[type]]);
+    //console.log(this.dbOpposite_);
     this.hidden_ = !this.db_;
+    //console.log(this.hidden_);
   }
 };
 
@@ -141,11 +142,12 @@ Blockly.Connection.prototype.connect_ = function(childConnection) {
   var parentConnection = this;
   var parentBlock = parentConnection.getSourceBlock();
   var childBlock = childConnection.getSourceBlock();
+  //console.log(childBlock);
   // Disconnect any existing parent on the child connection.
   if (childConnection.isConnected()) {
     childConnection.disconnect();
   }
-  console.log("this is connected");
+  //console.log("this is connected");
   if (parentConnection.isConnected()) {
     // Other connection is already connected to something.
     // Disconnect it and reattach it or bump it as needed.
@@ -354,8 +356,9 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
   // Don't offer to connect an already connected left (male) value plug to
   // an available right (female) value plug.  Don't offer to connect the
   // bottom of a statement block to one that's already connected.
-  if (candidate.type == Blockly.OUTPUT_VALUE ||
-      candidate.type == Blockly.PREVIOUS_STATEMENT) {
+  if (candidate.type === Blockly.OUTPUT_VALUE ||
+      candidate.type === Blockly.PREVIOUS_STATEMENT||
+      candidate.type === Blockly.CUSTOM_INPUT_CHANNEL_SHAPE) {
     if (candidate.isConnected() || this.isConnected()) {
       return false;
     }
@@ -364,7 +367,7 @@ Blockly.Connection.prototype.isConnectionAllowed = function(candidate) {
   // Offering to connect the left (male) of a value block to an already
   // connected value pair is ok, we'll splice it in.
   // However, don't offer to splice into an immovable block.
-  if (candidate.type == Blockly.INPUT_VALUE && candidate.isConnected() &&
+  if (candidate.type === Blockly.INPUT_VALUE && candidate.isConnected() &&
       !candidate.targetBlock().isMovable() &&
       !candidate.targetBlock().isShadow()) {
     return false;
@@ -399,6 +402,7 @@ Blockly.Connection.prototype.connect = function(otherConnection) {
     // Already connected together.  NOP.
     return;
   }
+  //console.log(otherConnection);
   this.checkConnection_(otherConnection);
   // Determine which block is superior (higher in the source stack).
   if (this.isSuperior()) {

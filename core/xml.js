@@ -146,19 +146,22 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
     var container;
     var empty = true;
     //console.log(input);
-    if (input.type == Blockly.DUMMY_INPUT) {
+    if (input.type === Blockly.DUMMY_INPUT) {
       continue;
     }else {
       var childBlock = input.connection.targetBlock();
-      if (input.type === Blockly.INPUT_VALUE || input.type === Blockly.CUSTOM_INPUT_CHANNEL_SHAPE) {
+      if (input.type === Blockly.INPUT_VALUE ||
+          input.type === Blockly.CUSTOM_INPUT_CHANNEL_SHAPE||
+          input.type === Blockly.SH_INP_CHANNEL_SHAPE) {
         container = goog.dom.createDom('value');
-      } else if (input.type == Blockly.NEXT_STATEMENT) {
+      } else if (input.type === Blockly.NEXT_STATEMENT) {
         container = goog.dom.createDom('statement');
       }
       var shadow = input.connection.getShadowDom();
       if (shadow && (!childBlock || !childBlock.isShadow())) {
         container.appendChild(Blockly.Xml.cloneShadow_(shadow));
       }
+      console.log(childBlock);
       if (childBlock) {
         container.appendChild(Blockly.Xml.blockToDom(childBlock, opt_noId));
         empty = false;
@@ -355,7 +358,7 @@ Blockly.Xml.domToWorkspace = function(xml, workspace) {
       } else if (name == 'shadow') {
         goog.asserts.fail('Shadow block cannot be a top-level block.');
         variablesFirst = false;
-      }  else if (name == 'variables') {
+      }  else if (name === 'variables') {
         if (variablesFirst) {
           Blockly.Xml.domToVariables(xmlChild, workspace);
         }
@@ -462,11 +465,14 @@ Blockly.Xml.domToBlock = function(xmlBlock, workspace) {
       var blocks = topBlock.getDescendants();
       // Render each block.
       for (var i = blocks.length - 1; i >= 0; i--) {
+        //console.log("init svg"+i);
         blocks[i].initSvg();
       }
       for (var i = blocks.length - 1; i >= 0; i--) {
+
         blocks[i].render(false);
       }
+       // console.log("render svg"+blocks.length);
       // Populating the connection database may be deferred until after the
       // blocks have rendered.
     //    console.log(topBlock);

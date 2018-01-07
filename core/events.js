@@ -498,9 +498,11 @@ Blockly.Events.Delete = function(block) {
   if (!block) {
     return;  // Blank event to be populated by fromJson.
   }
-  if (block.getParent()) {
-    throw 'Connected blocks cannot be deleted.';
-  }
+
+//  console.log(block.getParent());
+  //if (block.getParent()) {
+   // throw 'Connected blocks cannot be deleted.';
+ // }
   Blockly.Events.Delete.superClass_.constructor.call(this, block);
 
   if (block.workspace.rendered) {

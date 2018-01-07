@@ -53,6 +53,8 @@ Blockly.ConnectionDB.prototype.addConnection = function(connection) {
   if (connection.inDB_) {
     throw 'Connection already in database.';
   }
+  //console.log("add connection now");
+ // console.log(connection);
   if (connection.getSourceBlock().isInFlyout) {
     // Don't bother maintaining a database of connections in a flyout.
     return;
@@ -115,6 +117,7 @@ Blockly.ConnectionDB.prototype.findPositionForConnection_ =
   if (!this.length) {
     return 0;
   }
+  //console.log(connection.y_)
   var pointerMin = 0;
   var pointerMax = this.length;
   while (pointerMin < pointerMax) {
@@ -250,7 +253,9 @@ Blockly.ConnectionDB.prototype.searchForClosest = function(conn, maxRadius,
   // findPositionForConnection finds an index for insertion, which is always
   // after any block with the same y index.  We want to search both forward
   // and back, so search on both sides of the index.
+   // console.log("came to searchFor Closest");
   var closestIndex = this.findPositionForConnection_(conn);
+  //console.log("the closest index to be found is"+closestIndex);
 
   var bestConnection = null;
   var bestRadius = maxRadius;
@@ -295,8 +300,10 @@ Blockly.ConnectionDB.init = function(workspace) {
   var dbList = [];
   dbList[Blockly.INPUT_VALUE] = new Blockly.ConnectionDB();
   dbList[Blockly.OUTPUT_VALUE] = new Blockly.ConnectionDB();
+  dbList[Blockly.RIGHT_OUTPUT_VALUE]=new Blockly.ConnectionDB();
   dbList[Blockly.NEXT_STATEMENT] = new Blockly.ConnectionDB();
   dbList[Blockly.PREVIOUS_STATEMENT] = new Blockly.ConnectionDB();
   dbList[Blockly.CUSTOM_INPUT_CHANNEL_SHAPE]=new Blockly.ConnectionDB();
+  dbList[Blockly.SH_INP_CHANNEL_SHAPE]=new Blockly.ConnectionDB();
   workspace.connectionDBList = dbList;
 };

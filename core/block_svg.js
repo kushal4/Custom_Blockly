@@ -287,7 +287,7 @@ Blockly.BlockSvg.prototype.getRelativeToSurfaceXY = function() {
       // If this element is the current element on the drag surface, include
       // the translation of the drag surface itself.
       if (this.useDragSurface_ &&
-          this.workspace.blockDragSurface_.getCurrentBlock() == element) {
+          this.workspace.blockDragSurface_.getCurrentBlock() === element) {
         var surfaceTranslation = this.workspace.blockDragSurface_.getSurfaceTranslation();
         x += surfaceTranslation.x;
         y += surfaceTranslation.y;
@@ -308,6 +308,7 @@ Blockly.BlockSvg.prototype.moveBy = function(dx, dy) {
   goog.asserts.assert(!this.parentBlock_, 'Block has parent.');
   var event = new Blockly.Events.BlockMove(this);
   var xy = this.getRelativeToSurfaceXY();
+  //console.log("relative surface x coordi :"+xy.x);
   this.translate(xy.x + dx, xy.y + dy);
   this.moveConnections_(dx, dy);
   event.recordNew();
@@ -432,7 +433,7 @@ Blockly.BlockSvg.prototype.snapToGrid = function() {
  */
 Blockly.BlockSvg.prototype.getBoundingRectangle = function() {
   var blockXY = this.getRelativeToSurfaceXY(this);
-  console.log(this);
+ // console.log(this);
   var tab = this.outputConnection ? Blockly.BlockSvg.TAB_WIDTH : 0;
   var blockBounds = this.getHeightWidth();
   var topLeft;
@@ -727,6 +728,7 @@ Blockly.BlockSvg.prototype.moveConnections_ = function(dx, dy) {
   }
   var myConnections = this.getConnections_(false);
   for (var i = 0; i < myConnections.length; i++) {
+   // console.log(myConnections[i]);
     myConnections[i].moveBy(dx, dy);
   }
   var icons = this.getIcons();
@@ -1370,11 +1372,21 @@ Blockly.BlockSvg.prototype.setNextStatement = function(newBoolean, opt_check) {
  */
 Blockly.BlockSvg.prototype.setOutput = function(newBoolean, opt_check) {
   Blockly.BlockSvg.superClass_.setOutput.call(this, newBoolean, opt_check);
-
+//console.log("boolean value is"+newBoolean);
   if (this.rendered) {
     this.render();
     this.bumpNeighbours_();
   }
+};
+
+Blockly.BlockSvg.prototype.setRightOutput=function (newBoolean, opt_check) {
+  //console.log(this);
+    Blockly.BlockSvg.superClass_.setRightOutput.call(this, newBoolean, opt_check);
+   // console.log("right output boolean value is"+newBoolean);
+    if (this.rendered) {
+        this.render();
+        this.bumpNeighbours_();
+    }
 };
 
 /**
@@ -1433,14 +1445,19 @@ Blockly.BlockSvg.prototype.moveNumberedInputBefore = function(
  * @return {!Blockly.Input} The input object created.
  * @private
  */
+
 Blockly.BlockSvg.prototype.appendInput_ = function(type, name) {
   var input = Blockly.BlockSvg.superClass_.appendInput_.call(this, type, name);
-
+//console.log(this.rendered)
   if (this.rendered) {
     this.render();
+
     // Adding an input will cause the block to change shape.
     this.bumpNeighbours_();
+  }else{
+   // console.log("condition render false");
   }
+    //console.log("after render");
   return input;
 };
 
@@ -1482,6 +1499,7 @@ Blockly.BlockSvg.prototype.getConnections_ = function(all) {
  * @private
  */
 Blockly.BlockSvg.prototype.makeConnection_ = function(type) {
+ // console.log("before new connection rendering");
   return new Blockly.RenderedConnection(this, type);
 };
 
@@ -1494,7 +1512,7 @@ Blockly.BlockSvg.prototype.bumpNeighbours_ = function() {
   if (!this.workspace) {
     return;  // Deleted block.
   }
-  if (Blockly.dragMode_ != Blockly.DRAG_NONE) {
+  if (Blockly.dragMode_ !== Blockly.DRAG_NONE) {
     return;  // Don't bump blocks during a drag.
   }
   var rootBlock = this.getRootBlock();

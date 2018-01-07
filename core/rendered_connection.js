@@ -38,13 +38,15 @@ goog.require('Blockly.Connection');
  */
 Blockly.RenderedConnection = function(source, type) {
   Blockly.RenderedConnection.superClass_.constructor.call(this, source, type);
-
+  //console.log("Render Connection");
   /**
    * Workspace units, (0, 0) is top left of block.
    * @type {!goog.math.Coordinate}
    * @private
    */
   this.offsetInBlock_ = new goog.math.Coordinate(0, 0);
+    this.innerCount_=0;
+
 };
 goog.inherits(Blockly.RenderedConnection, Blockly.Connection);
 
@@ -56,7 +58,11 @@ goog.inherits(Blockly.RenderedConnection, Blockly.Connection);
  * @return {number} The distance between connections, in workspace units.
  */
 Blockly.RenderedConnection.prototype.distanceFrom = function(otherConnection) {
-  var xDiff = this.x_ - otherConnection.x_;
+  //console.log("other connection x val is"+otherConnection.x_);
+  //console.log("this connection x val is "+this.x_);
+//console.log("this connection type is :"+this.type);
+//console.log("the other connection type is :"+otherConnection.type);
+  var xDiff = (this.x_) - otherConnection.x_;
   var yDiff = this.y_ - otherConnection.y_;
   return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
 };
@@ -80,6 +86,7 @@ Blockly.RenderedConnection.prototype.bumpAwayFrom_ = function(staticConnection) 
     return;
   }
   var reverse = false;
+
   if (!rootBlock.isMovable()) {
     // Can't bump an uneditable block away.
     // Check to see if the other block is movable.
@@ -92,10 +99,11 @@ Blockly.RenderedConnection.prototype.bumpAwayFrom_ = function(staticConnection) 
     reverse = true;
   }
   // Raise it to the top for extra visibility.
-  var selected = Blockly.selected == rootBlock;
+  var selected = Blockly.selected === rootBlock;
   selected || rootBlock.addSelect();
   var dx = (staticConnection.x_ + Blockly.SNAP_RADIUS) - this.x_;
   var dy = (staticConnection.y_ + Blockly.SNAP_RADIUS) - this.y_;
+   // console.log("bump away from coordinate x"+ dx);
   if (reverse) {
     // When reversing a bump due to an uneditable block, bump up.
     dy = -dy;
@@ -118,11 +126,14 @@ Blockly.RenderedConnection.prototype.moveTo = function(x, y) {
     this.db_.removeConnection_(this);
   }
   this.x_ = x;
+ // console.log("coordinate x is moved to : ",this.x_);
   this.y_ = y;
+
   // Insert it into its new location in the database.
   if (!this.hidden_) {
     this.db_.addConnection(this);
   }
+
 };
 
 /**
@@ -131,7 +142,13 @@ Blockly.RenderedConnection.prototype.moveTo = function(x, y) {
  * @param {number} dy Change to y coordinate, in workspace units.
  */
 Blockly.RenderedConnection.prototype.moveBy = function(dx, dy) {
-  this.moveTo(this.x_ + dx, this.y_ + dy);
+  //if(this.x_>this.x_ + dx){
+ //     this.moveTo(this.x_ , this.y_);
+  //}else{
+     // console.log("change this coordinate by"+dx);
+      this.moveTo((this.x_ + dx), (this.y_ + dy));
+  //}
+
 };
 
 /**
@@ -168,13 +185,40 @@ Blockly.RenderedConnection.prototype.tighten_ = function() {
     if (!svgRoot) {
       throw 'block is not rendered.';
     }
+    //console.log("block moved rendered");
     // Workspace coordinates.
     var xy = Blockly.utils.getRelativeXY(svgRoot);
-    block.getSvgRoot().setAttribute('transform',
-        'translate(' + (xy.x - dx) + ',' + (xy.y - dy) + ')');
-    block.moveConnections_(-dx, -dy);
+    if(this.innerCount_ < 1){
+        if(this.targetConnection.type === Blockly.CUSTOM_INPUT_CHANNEL_SHAPE
+        ){
+            console.log("translate  Blockly.CUSTOM_INPUT_CHANNEL_SHAPE in x direction : "+(xy.x - (dx-23)));
+            block.getSvgRoot().setAttribute('transform',
+                'translate(' + (xy.x - (dx+102)) + ',' + (xy.y - dy) + ')');
+            block.getSvgRoot().setAttribute('id','mycustom_CUSTOM_INPUT_CHANNEL_SHAPE');
+        }else if(this.targetConnection.type === Blockly.SH_INP_CHANNEL_SHAPE
+        ){
+              console.log("translate  Blockly.SH_INP_CHANNEL_SHAPE in x direction : "+(xy.x - (dx-23)));
+            block.getSvgRoot().setAttribute('transform',
+                'translate(' + (xy.x - (dx-103)) + ',' + (xy.y - dy) + ')');
+            block.getSvgRoot().setAttribute('id','mycustom_SH_INP_CHANNEL_SHAPE');
+        }else{
+            block.getSvgRoot().setAttribute('transform',
+                'translate(' + (xy.x - dx) + ',' + (xy.y - dy) + ')');
+            block.getSvgRoot().setAttribute('id','mycustom');
+        }
+    }
+
+this.innerCount_++;
+    console.log("the inner count is"+this.innerCount_);
+    //console.log(this.targetConnection.type);
+
+      block.moveConnections_(-dx, -dy);
+    //console.log("move block rendered");
   }
 };
+Blockly.RenderedConnection.prototype.sensetighten_=function () {
+    
+}
 
 /**
  * Find the closest compatible connection to this connection.
@@ -189,7 +233,7 @@ Blockly.RenderedConnection.prototype.tighten_ = function() {
  *     and 'radius' which is the distance.
  */
 Blockly.RenderedConnection.prototype.closest = function(maxLimit, dx, dy) {
-  //console.log(this.dbOpposite_);
+ // console.log(this.dbOpposite_);
   return this.dbOpposite_.searchForClosest(this, maxLimit, dx, dy);
 };
 
@@ -198,11 +242,18 @@ Blockly.RenderedConnection.prototype.closest = function(maxLimit, dx, dy) {
  */
 Blockly.RenderedConnection.prototype.highlight = function() {
   var steps;
-  if (this.type == Blockly.INPUT_VALUE || this.type == Blockly.OUTPUT_VALUE) {
+  if (this.type === Blockly.INPUT_VALUE ||
+      this.type === Blockly.OUTPUT_VALUE) {
     steps = 'm 0,0 ' + Blockly.BlockSvg.TAB_PATH_DOWN + ' v 5';
+   // console.log("highlight connection now");
+  }else if(this.type === Blockly.SH_INP_CHANNEL_SHAPE ){
+      steps = 'm 0,8 ' + Blockly.BlockSvg.CUSTOM_TAB_PATH_DOWN + ' v 5';
+  }else if(this.type === Blockly.CUSTOM_INPUT_CHANNEL_SHAPE ){
+      steps = 'm 102.97015380859375 ,8 '+ Blockly.BlockSvg.CUSTOM_TAB_PATH_DOWN + ' v 5';
   } else {
     steps = 'm -20,0 h 5 ' + Blockly.BlockSvg.NOTCH_PATH_LEFT + ' h 5';
   }
+ // console.log(steps);
   var xy = this.sourceBlock_.getRelativeToSurfaceXY();
   var x = this.x_ - xy.x;
   var y = this.y_ - xy.y;
@@ -311,7 +362,17 @@ Blockly.RenderedConnection.prototype.hideAll = function() {
  */
 Blockly.RenderedConnection.prototype.isConnectionAllowed = function(candidate,
     maxRadius) {
+    //console.log("maxRadius is :"+maxRadius);
+ // console.log(candidate);
+  var overall_diff=this.distanceFrom(candidate);
+  if(candidate.type=== Blockly.SH_INP_CHANNEL_SHAPE){
+    maxRadius=130;
+  }else if(candidate.type=== Blockly.CUSTOM_INPUT_CHANNEL_SHAPE){
+      maxRadius=130;
+  }
+ // console.log("distance from candidate is :-"+overall_diff);
   if (this.distanceFrom(candidate) > maxRadius) {
+
     return false;
   }
 
@@ -371,7 +432,10 @@ Blockly.RenderedConnection.prototype.respawnShadow_ = function() {
  * @private
  */
 Blockly.RenderedConnection.prototype.neighbours_ = function(maxLimit) {
+    //console.log(this.dbOpposite_.getNeighbours);
   return this.dbOpposite_.getNeighbours(this, maxLimit);
+
+
 };
 
 /**
@@ -384,9 +448,12 @@ Blockly.RenderedConnection.prototype.connect_ = function(childConnection) {
   Blockly.RenderedConnection.superClass_.connect_.call(this, childConnection);
 
   var parentConnection = this;
+  //console.log(this);
   var parentBlock = parentConnection.getSourceBlock();
   var childBlock = childConnection.getSourceBlock();
-
+//console.log(parentConnection);
+//console.log(parentBlock);
+//console.log(childBlock);
   if (parentBlock.rendered) {
     parentBlock.updateDisabled();
   }
@@ -395,13 +462,16 @@ Blockly.RenderedConnection.prototype.connect_ = function(childConnection) {
   }
   if (parentBlock.rendered && childBlock.rendered) {
     if (parentConnection.type == Blockly.NEXT_STATEMENT ||
-        parentConnection.type == Blockly.PREVIOUS_STATEMENT) {
+        parentConnection.type == Blockly.PREVIOUS_STATEMENT
+        ) {
       // Child block may need to square off its corners if it is in a stack.
       // Rendering a child will render its parent.
+         // console.log(childBlock);
       childBlock.render();
     } else {
       // Child block does not change shape.  Rendering the parent node will
       // move its connected children into position.
+        console.log(parentBlock);
       parentBlock.render();
     }
   }

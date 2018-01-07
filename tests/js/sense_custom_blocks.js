@@ -10,42 +10,62 @@ $(document).ready(function () {
     Blockly.Blocks['custom_input_channel'] = {
         init: function () {
             file_block = this;
-            this.appendCstomInpChan("custom_block").setCheck(null).appendField("InpC", "paho_chan");
+
+            this.appendCstomInpChan("custom_block").setCheck(true).appendField("InpChannel", "paho_chan");
             this.setColour(120);
+            this.setRightOutput(true, 'Number');
+            //console.log(this);
+           // this.set("custom_inp");
+            //this.setOutput(true, 'Number');
             //this.setTooltip('');
             //this.setHelpUrl('http://www.example.com/');
         }
     };
-    Require_block = Blockly.Blocks['require_file'];
-    Blockly.JavaScript['require_file'] = function (block) {
-        // String or array length.
-        var argument0 = Blockly.JavaScript.valueToCode(block, 'VALUE',
-            Blockly.JavaScript.ORDER_FUNCTION_CALL) || '\'\'';
-        return [argument0 + '.length', Blockly.JavaScript.ORDER_MEMBER];
+    Blockly.Blocks['sh_input_channel'] = {
+        init: function () {
+            file_block = this;
+
+            this.appendSHInpChan("custom_block").setCheck(false).appendField("ShChannel", "sh_chan");
+            //this.setInputsInline(true);
+            this.setColour(120);
+            this.setRightOutput(true, 'Number');
+            //this.setTooltip('');
+            //this.setHelpUrl('http://www.example.com/');
+        }
     };
-            Blockly.Blocks['require_file'] = {
+
+
+         Blockly.Blocks['require_file'] = {
                 init: function () {
                     //Require_block=this;
                     this.appendValueInput("Req")
                         .setCheck(null)
                         .appendField("Require", "res");
                     this.setInputsInline(false);
-
+                    this.setOutput(true, 'Number');
                     this.setColour(65);
                     // this.setTooltip('');
                     //this.setHelpUrl('http://www.example.com/');
                 }
             };
-  /* Blockly.Blocks['custom_input_channel'] = {
-        init: function () {
-            file_block = this;
-            this.appendDummyInput("custom_block").appendField("Input_channel", "paho_chan");
-            this.setColour(120);
-            this.setTooltip('');
-            this.setHelpUrl('http://www.example.com/');
-        }
+    //Require_block = Blockly.Blocks['require_file'];
+    Blockly.JavaScript['require_file'] = function (block) {
+        // String or array length.
+        var argument0 = Blockly.JavaScript.valueToCode(block, 'VALUE',
+            Blockly.JavaScript.ORDER_FUNCTION_CALL) || '\'\'';
+        return [argument0 + '.length', Blockly.JavaScript.ORDER_MEMBER];
     };
-*/
+
+    /* Blockly.Blocks['custom_input_channel'] = {
+          init: function () {
+              file_block = this;
+              this.appendDummyInput("custom_block").appendField("Input_channel", "paho_chan");
+              this.setColour(120);
+              this.setTooltip('');
+              this.setHelpUrl('http://www.example.com/');
+          }
+      };
+  */
    /* Blockly.Blocks['file_name'] = {
         init: function () {
             file_block = this;
@@ -66,12 +86,12 @@ $(document).ready(function () {
         var code = '../n';
         return code;
     }
-    var joined_block = Blockly.Blocks['join_blocks'];
-    console.log(joined_block);
-    Blockly.JavaScript['join_blocks'] = function () {
-        var code = '.../n';
-        return code;
-    }
+  //  var joined_block = Blockly.Blocks['join_blocks'];
+   // console.log(joined_block);
+  //  Blockly.JavaScript['join_blocks'] = function () {
+    //    var code = '.../n';
+     //   return code;
+   // }
 
 
     var selected_file_name_value;

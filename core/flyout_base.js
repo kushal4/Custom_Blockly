@@ -428,11 +428,11 @@ Blockly.Flyout.prototype.show = function(xmlList) {
   this.workspace_.setResizesEnabled(false);
   this.hide();
   this.clearOldBlocks_();
-
+//console.log("called from flyout.js");
   // Handle dynamic categories, represented by a name instead of a list of XML.
   // Look up the correct category generation function and call that to get a
   // valid XML list.
-  if (typeof xmlList == 'string') {
+  if (typeof xmlList === 'string') {
     var fnToApply = this.workspace_.targetWorkspace.getToolboxCategoryCallback(
         xmlList);
     goog.asserts.assert(goog.isFunction(fnToApply),

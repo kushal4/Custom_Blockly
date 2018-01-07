@@ -111,12 +111,23 @@ Blockly.HTML_NS = 'http://www.w3.org/1999/xhtml';
  * @const
  */
 Blockly.INPUT_VALUE = 1;
+/**
+ * ENUM for a left-facing value input.  E.g. 'set item to' or 'return'.
+ * @const
+ */
+Blockly.LEFT_INPUT_VALUE = 10;
 
 /**
  * ENUM for a left-facing value output.  E.g. 'random fraction'.
  * @const
  */
 Blockly.OUTPUT_VALUE = 2;
+
+/**
+ * ENUM for a right-facing value output.  E.g. 'random fraction'.
+ * @const
+ */
+Blockly.RIGHT_OUTPUT_VALUE=9;
 
 /**
  * ENUM for a down-facing block stack.  E.g. 'if-do' or 'else'.
@@ -138,6 +149,7 @@ Blockly.DUMMY_INPUT = 5;
 
 Blockly.CUSTOM_INPUT_CHANNEL_SHAPE=7;
 
+Blockly.SH_INP_CHANNEL_SHAPE=8;
 /**
  * ENUM for left alignment.
  * @const
@@ -190,8 +202,8 @@ Blockly.OPPOSITE_TYPE[Blockly.INPUT_VALUE] = Blockly.OUTPUT_VALUE;
 Blockly.OPPOSITE_TYPE[Blockly.OUTPUT_VALUE] = Blockly.INPUT_VALUE;
 Blockly.OPPOSITE_TYPE[Blockly.NEXT_STATEMENT] = Blockly.PREVIOUS_STATEMENT;
 Blockly.OPPOSITE_TYPE[Blockly.PREVIOUS_STATEMENT] = Blockly.NEXT_STATEMENT;
-Blockly.OPPOSITE_TYPE[Blockly.CUSTOM_INPUT_CHANNEL_SHAPE]=Blockly.CUSTOM_INPUT_CHANNEL_SHAPE;
-
+Blockly.OPPOSITE_TYPE[Blockly.CUSTOM_INPUT_CHANNEL_SHAPE]=Blockly.SH_INP_CHANNEL_SHAPE;
+Blockly.OPPOSITE_TYPE[Blockly.SH_INP_CHANNEL_SHAPE]=Blockly.CUSTOM_INPUT_CHANNEL_SHAPE;
 /**
  * ENUM for toolbox and flyout at top of screen.
  * @const
