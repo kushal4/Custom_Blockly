@@ -11,10 +11,18 @@ $(document).ready(function () {
         init: function () {
             file_block = this;
 
-            this.appendCstomInpChan("custom_block").setCheck(true).appendField("InpChannel", "paho_chan");
-            this.setColour(120);
+            this.appendCstomInpChan("custom_block").setCheck(true)
+                .appendField("InpChannel", "paho_chan");
+            this.setCustomBlock(true);
             this.setRightOutput(true, 'Number');
-            //console.log(this);
+            this.setLineInput(true);
+
+
+            this.setColour(120);
+            //this.setCustomBlock(true);
+           // this.setLineInput(true);
+            //this.setRightOutput(true, 'Number');
+            console.log(this);
            // this.set("custom_inp");
             //this.setOutput(true, 'Number');
             //this.setTooltip('');
@@ -26,13 +34,17 @@ $(document).ready(function () {
             file_block = this;
 
             this.appendSHInpChan("custom_block").setCheck(false).appendField("ShChannel", "sh_chan");
+            this.setCustomBlock(true);
+            this.setRightOutput(true, 'Number');
+            this.setLeftInput(true);
             //this.setInputsInline(true);
             this.setColour(120);
-            this.setRightOutput(true, 'Number');
+            //this.setRightOutput(true, 'Number');
             //this.setTooltip('');
             //this.setHelpUrl('http://www.example.com/');
         }
     };
+
 
 
          Blockly.Blocks['require_file'] = {

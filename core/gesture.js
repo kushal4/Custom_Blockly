@@ -611,6 +611,7 @@ Blockly.Gesture.prototype.doBlockClick_ = function() {
         Blockly.Events.setGroup(true);
       }
       var newBlock = this.flyout_.createBlock(this.targetBlock_);
+      console.log(newBlock);
       newBlock.scheduleSnapAndBump();
     }
   } else {

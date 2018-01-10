@@ -58,7 +58,10 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
   workspace.blockDB_[this.id] = this;
   /** @type {Blockly.Connection} */
   this.outputConnection = null;
-  this.rightoutputConnection=null;
+  this.rightoutputConnection=false;
+  this.setLineconnection=false;
+  this.setLeftInpConnection=false;
+  this.setCustomBlockConnection=false;
   /** @type {Blockly.Connection} */
   this.nextConnection = null;
   /** @type {Blockly.Connection} */
@@ -429,8 +432,10 @@ Blockly.Block.prototype.getChildren = function() {
 /**
  * Set parent of this block to be a new block or null.
  * @param {Blockly.Block} newParent New parent block.
+ * sense TODO:ADDITION OF THE RIGHT INPUT AS PARENT
  */
 Blockly.Block.prototype.setParent = function(newParent) {
+  console.log(newParent);
   if (newParent == this.parentBlock_) {
     return;
   }
@@ -450,6 +455,8 @@ Blockly.Block.prototype.setParent = function(newParent) {
     // its connection locations.
   } else {
     // Remove this block from the workspace's list of top-most blocks.
+      console.log("remove top block now");
+      console.log(this);
     this.workspace.removeTopBlock(this);
   }
 
@@ -791,14 +798,15 @@ Blockly.Block.prototype.setNextStatement = function(newBoolean, opt_check) {
  *     of returned types.  Null or undefined if any type could be returned
  *     (e.g. variable get).
  */
-Blockly.Block.prototype.setOutput = function(newBoolean, opt_check) {
-  //console.log("the block value is "+newBoolean);
+Blockly.Block.prototype.setOutput = function(newBoolean, opt_check,custom_output) {
+  console.log("the block value is "+newBoolean);
   if (newBoolean) {
     if (opt_check === undefined) {
       opt_check = null;
     }
 
     if (!this.outputConnection) {
+     // console.log("output now");
       goog.asserts.assert(!this.previousConnection,
           'Remove previous connection prior to adding output connection.');
       this.outputConnection = this.makeConnection_(Blockly.OUTPUT_VALUE);
@@ -806,6 +814,7 @@ Blockly.Block.prototype.setOutput = function(newBoolean, opt_check) {
     }
     this.outputConnection.setCheck(opt_check);
   } else {
+    //  console.log("already left output");
     if (this.outputConnection) {
       goog.asserts.assert(!this.outputConnection.isConnected(),
           'Must disconnect output value before removing connection.');
@@ -813,24 +822,37 @@ Blockly.Block.prototype.setOutput = function(newBoolean, opt_check) {
       this.outputConnection = null;
     }
   }
+    this.rightoutputConnection=custom_output;
+};
+Blockly.Block.prototype.setLineInput=function(newBoolean){
+  this.setLineconnection=newBoolean;
+    //this.setConLineInput(true);
+    return this;
+
 };
 Blockly.Block.prototype.setRightOutput=function(newBoolean, opt_check){
+this.rightoutputConnection=newBoolean;
 
     if (newBoolean) {
         if (opt_check === undefined) {
             opt_check = null;
         }
-        if (!this.rightoutputConnection) {
-          //  console.log("block.js right output");
+        if (!this.outputConnection) {
+            //  console.log("block.js right output");
 
             goog.asserts.assert(!this.previousConnection,
                 'Remove previous connection prior to adding output connection.');
-            this.rightoutputConnection = this.makeConnection_(Blockly.RIGHT_OUTPUT_VALUE);
+            this.outputConnection = this.makeConnection_(Blockly.OUTPUT_VALUE);
 
         }
-        this.rightoutputConnection.setCheck(opt_check);
+        //console.log(this.outputConnection);
+        this.outputConnection.setCheck(opt_check);
+        this.setCustomBlockConnection=newBoolean;
+       // if(this.outputConnection){
+      //  //    this.outputConnection.setConCustomBlock(true);
+      //  }
     } else {
-        if (this.rightoutputConnection) {
+        if (this.outputConnection) {
             goog.asserts.assert(!this.rightoutputConnection.isConnected(),
                 'Must disconnect output value before removing connection.');
             this.rightoutputConnection.dispose();
@@ -839,6 +861,21 @@ Blockly.Block.prototype.setRightOutput=function(newBoolean, opt_check){
     }
 };
 
+Blockly.Block.prototype.setLeftInput= function (newBoolean) {
+    this.setLeftInpConnection=newBoolean;
+  // this.setConLineInput(Boolean);
+    return this;
+};
+
+
+Blockly.Block.prototype.setCustomBlock=function (newBoolean) {
+
+
+
+    //console.log("custom blockl"+this.setCustomBlockConnection);
+    //return this;
+   //
+}
 /**
  * Set whether value inputs are arranged horizontally or vertically.
  * @param {boolean} newBoolean True if inputs are horizontal.
@@ -975,7 +1012,7 @@ Blockly.Block.prototype.toString = function(opt_maxLength, opt_emptyToken) {
  * @return {!Blockly.Input} The input object created.
  */
 Blockly.Block.prototype.appendValueInput = function(name) {
-  return this.appendInput_(Blockly.INPUT_VALUE, name);
+  return this.appendInput_(Blockly.INPUT_VALUE, name,false);
 };
 
 
@@ -986,7 +1023,7 @@ Blockly.Block.prototype.appendValueInput = function(name) {
  * @return {!Blockly.Input} The input object created.
  */
 Blockly.Block.prototype.appendStatementInput = function(name) {
-  return this.appendInput_(Blockly.NEXT_STATEMENT, name);
+  return this.appendInput_(Blockly.NEXT_STATEMENT, name,false);
 };
 
 /**
@@ -996,15 +1033,15 @@ Blockly.Block.prototype.appendStatementInput = function(name) {
  * @return {!Blockly.Input} The input object created.
  */
 Blockly.Block.prototype.appendDummyInput = function(opt_name) {
-  return this.appendInput_(Blockly.DUMMY_INPUT, opt_name || '');
+  return this.appendInput_(Blockly.DUMMY_INPUT, opt_name || '',false);
 };
 
 Blockly.Block.prototype.appendCstomInpChan=function (opt_name) {
-    return this.appendInput_(Blockly.CUSTOM_INPUT_CHANNEL_SHAPE, opt_name || '');
+    return this.appendInput_(Blockly.INPUT_VALUE, opt_name || '',true);
 
 }
 Blockly.Block.prototype.appendSHInpChan=function (opt_name) {
-    return this.appendInput_(Blockly.SH_INP_CHANNEL_SHAPE, opt_name || '');
+    return this.appendInput_(Blockly.INPUT_VALUE, opt_name || '',true);
 }
 
 /**
@@ -1320,13 +1357,11 @@ Blockly.Block.newFieldVariableFromJson_ = function(options) {
  * @return {!Blockly.Input} The input object created.
  * @private
  */
-Blockly.Block.prototype.appendInput_ = function(type, name) {
+Blockly.Block.prototype.appendInput_ = function(type, name,is_custom) {
   var connection = null;
   if (type === Blockly.INPUT_VALUE ||
-      type === Blockly.NEXT_STATEMENT ||
-      type === Blockly.CUSTOM_INPUT_CHANNEL_SHAPE||
-      type === Blockly.SH_INP_CHANNEL_SHAPE) {
-    connection = this.makeConnection_(type);
+      type === Blockly.NEXT_STATEMENT) {
+    connection = this.makeConnection_(type,is_custom);
     //console.log(connection);
    // console.log("connection made here");
      // console.log(type);

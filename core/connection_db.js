@@ -242,14 +242,14 @@ Blockly.ConnectionDB.prototype.searchForClosest = function(conn, maxRadius,
   if (!this.length) {
     return {connection: null, radius: maxRadius};
   }
-
+console.log(conn);
   // Stash the values of x and y from before the drag.
   var baseY = conn.y_;
   var baseX = conn.x_;
-
+//console.log("the base x is :"+baseX);
   conn.x_ = baseX + dxy.x;
   conn.y_ = baseY + dxy.y;
-
+//console.log("offset of the connection"+dxy);
   // findPositionForConnection finds an index for insertion, which is always
   // after any block with the same y index.  We want to search both forward
   // and back, so search on both sides of the index.
@@ -303,7 +303,7 @@ Blockly.ConnectionDB.init = function(workspace) {
   dbList[Blockly.RIGHT_OUTPUT_VALUE]=new Blockly.ConnectionDB();
   dbList[Blockly.NEXT_STATEMENT] = new Blockly.ConnectionDB();
   dbList[Blockly.PREVIOUS_STATEMENT] = new Blockly.ConnectionDB();
-  dbList[Blockly.CUSTOM_INPUT_CHANNEL_SHAPE]=new Blockly.ConnectionDB();
-  dbList[Blockly.SH_INP_CHANNEL_SHAPE]=new Blockly.ConnectionDB();
+  dbList[Blockly.LEFT_INPUT_VALUE]=new Blockly.ConnectionDB();
+  dbList[Blockly.RIGHT_OUTPUT_VALUE]=new Blockly.ConnectionDB();
   workspace.connectionDBList = dbList;
 };

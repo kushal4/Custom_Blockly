@@ -142,6 +142,9 @@ Blockly.Workspace.prototype.addTopBlock = function(block) {
  * @param {!Blockly.Block} block Block to remove.
  */
 Blockly.Workspace.prototype.removeTopBlock = function(block) {
+  console.log(this.topBlocks_);
+  console.log(block);
+    //this.topBlocks_.push(block);
   if (!goog.array.remove(this.topBlocks_, block)) {
     throw 'Block not present in workspace\'s list of top-most blocks.';
   }

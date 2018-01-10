@@ -146,14 +146,15 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
     var container;
     var empty = true;
     //console.log(input);
-    if (input.type === Blockly.DUMMY_INPUT) {
+    if (input.type === Blockly.DUMMY_INPUT ||
+        input.type === Blockly.CUSTOM_INPUT_CHANNEL_SHAPE) {
       continue;
     }else {
       var childBlock = input.connection.targetBlock();
       if (input.type === Blockly.INPUT_VALUE ||
-          input.type === Blockly.CUSTOM_INPUT_CHANNEL_SHAPE||
-          input.type === Blockly.SH_INP_CHANNEL_SHAPE) {
+          input.type === Blockly.SH_INP_CHANNEL_SHAPE ) {
         container = goog.dom.createDom('value');
+        //console.log(container);
       } else if (input.type === Blockly.NEXT_STATEMENT) {
         container = goog.dom.createDom('statement');
       }
@@ -161,7 +162,7 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
       if (shadow && (!childBlock || !childBlock.isShadow())) {
         container.appendChild(Blockly.Xml.cloneShadow_(shadow));
       }
-      console.log(childBlock);
+      //console.log(childBlock);
       if (childBlock) {
         container.appendChild(Blockly.Xml.blockToDom(childBlock, opt_noId));
         empty = false;
@@ -173,7 +174,7 @@ Blockly.Xml.blockToDom = function(block, opt_noId) {
       element.appendChild(container);
     }
   }
-  if (block.inputsInlineDefault != block.inputsInline) {
+  if (block.inputsInlineDefault !== block.inputsInline) {
     element.setAttribute('inline', block.inputsInline);
   }
   if (block.isCollapsed()) {
@@ -671,19 +672,19 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
 
   var inline = xmlBlock.getAttribute('inline');
   if (inline) {
-    block.setInputsInline(inline == 'true');
+    block.setInputsInline(inline === 'true');
   }
   var disabled = xmlBlock.getAttribute('disabled');
   if (disabled) {
-    block.setDisabled(disabled == 'true');
+    block.setDisabled(disabled === 'true');
   }
   var deletable = xmlBlock.getAttribute('deletable');
   if (deletable) {
-    block.setDeletable(deletable == 'true');
+    block.setDeletable(deletable === 'true');
   }
   var movable = xmlBlock.getAttribute('movable');
   if (movable) {
-    block.setMovable(movable == 'true');
+    block.setMovable(movable === 'true');
   }
   var editable = xmlBlock.getAttribute('editable');
   if (editable) {
@@ -713,8 +714,9 @@ Blockly.Xml.domToBlockHeadless_ = function(xmlBlock, workspace) {
  * @param {!Element} xmlBlock XML block element.
  */
 Blockly.Xml.deleteNext = function(xmlBlock) {
+  console.log("remove nextBlock")
   for (var i = 0, child; child = xmlBlock.childNodes[i]; i++) {
-    if (child.nodeName.toLowerCase() == 'next') {
+    if (child.nodeName.toLowerCase() === 'next') {
       xmlBlock.removeChild(child);
       break;
     }

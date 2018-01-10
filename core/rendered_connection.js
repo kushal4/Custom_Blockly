@@ -36,16 +36,18 @@ goog.require('Blockly.Connection');
  * @extends {Blockly.Connection}
  * @constructor
  */
-Blockly.RenderedConnection = function(source, type) {
+Blockly.RenderedConnection = function(source, type,is_custom) {
   Blockly.RenderedConnection.superClass_.constructor.call(this, source, type);
-  //console.log("Render Connection");
+  //console.lg("Render Connection");
   /**
    * Workspace units, (0, 0) is top left of block.
    * @type {!goog.math.Coordinate}
    * @private
    */
+  //console.log("rendered connection called");
   this.offsetInBlock_ = new goog.math.Coordinate(0, 0);
     this.innerCount_=0;
+    this.is_custom_connection=is_custom;
 
 };
 goog.inherits(Blockly.RenderedConnection, Blockly.Connection);
@@ -58,9 +60,9 @@ goog.inherits(Blockly.RenderedConnection, Blockly.Connection);
  * @return {number} The distance between connections, in workspace units.
  */
 Blockly.RenderedConnection.prototype.distanceFrom = function(otherConnection) {
-  //console.log("other connection x val is"+otherConnection.x_);
-  //console.log("this connection x val is "+this.x_);
-//console.log("this connection type is :"+this.type);
+  console.log("other connection x val is"+otherConnection.x_);
+  console.log("this connection x val is "+this.x_);
+//console.lo("this connection type is :"+this.type);
 //console.log("the other connection type is :"+otherConnection.type);
   var xDiff = (this.x_) - otherConnection.x_;
   var yDiff = this.y_ - otherConnection.y_;
@@ -188,28 +190,26 @@ Blockly.RenderedConnection.prototype.tighten_ = function() {
     //console.log("block moved rendered");
     // Workspace coordinates.
     var xy = Blockly.utils.getRelativeXY(svgRoot);
-    if(this.innerCount_ < 1){
-        if(this.targetConnection.type === Blockly.CUSTOM_INPUT_CHANNEL_SHAPE
-        ){
-            console.log("translate  Blockly.CUSTOM_INPUT_CHANNEL_SHAPE in x direction : "+(xy.x - (dx-23)));
-            block.getSvgRoot().setAttribute('transform',
-                'translate(' + (xy.x - (dx+102)) + ',' + (xy.y - dy) + ')');
-            block.getSvgRoot().setAttribute('id','mycustom_CUSTOM_INPUT_CHANNEL_SHAPE');
-        }else if(this.targetConnection.type === Blockly.SH_INP_CHANNEL_SHAPE
-        ){
-              console.log("translate  Blockly.SH_INP_CHANNEL_SHAPE in x direction : "+(xy.x - (dx-23)));
-            block.getSvgRoot().setAttribute('transform',
-                'translate(' + (xy.x - (dx-103)) + ',' + (xy.y - dy) + ')');
-            block.getSvgRoot().setAttribute('id','mycustom_SH_INP_CHANNEL_SHAPE');
-        }else{
-            block.getSvgRoot().setAttribute('transform',
-                'translate(' + (xy.x - dx) + ',' + (xy.y - dy) + ')');
-            block.getSvgRoot().setAttribute('id','mycustom');
+    //if(this.innerCount_ < 1) {
+        if (block.type === "custom_input_channel") {
+            console.log("translate  Blockly.CUSTOM_INPUT_CHANNEL_SHAPE in x direction : " + (xy.x - (dx)));
+            svgRoot.setAttribute('transform',
+                'translate(' + (xy.x - (dx)) + ',' + (xy.y - (dy-6)) + ')');
+            svgRoot.setAttribute('id', 'mycustom');
+        } else {
+            svgRoot.setAttribute('transform',
+                'translate(' + (xy.x - (dx)) + ',' + (xy.y - dy) + ')');
         }
-    }
+   // }
+      //console.log("translate  Blockly.CUSTOM_INPUT_CHANNEL_SHAPE in x direction : "+(xy.x - (dx)));
 
-this.innerCount_++;
-    console.log("the inner count is"+this.innerCount_);
+
+
+    //}
+
+//this.innerCount_++;
+    //this.innerCount_=0;
+   // console.log("the inner count is"+this.innerCount_);
     //console.log(this.targetConnection.type);
 
       block.moveConnections_(-dx, -dy);
@@ -242,15 +242,19 @@ Blockly.RenderedConnection.prototype.closest = function(maxLimit, dx, dy) {
  */
 Blockly.RenderedConnection.prototype.highlight = function() {
   var steps;
-  if (this.type === Blockly.INPUT_VALUE ||
-      this.type === Blockly.OUTPUT_VALUE) {
+   // console.log(this);
+    var is_custom_type=this.is_custom_connection;
+    //console.log("is it custom ? "+is_custom_type);
+  if ((this.type === Blockly.INPUT_VALUE ||
+      this.type === Blockly.OUTPUT_VALUE )&& (is_custom_type === false) ) {
     steps = 'm 0,0 ' + Blockly.BlockSvg.TAB_PATH_DOWN + ' v 5';
-   // console.log("highlight connection now");
-  }else if(this.type === Blockly.SH_INP_CHANNEL_SHAPE ){
+   // console.log(this.set)
+
+  }
+
+  if((is_custom_type === true)){
       steps = 'm 0,8 ' + Blockly.BlockSvg.CUSTOM_TAB_PATH_DOWN + ' v 5';
-  }else if(this.type === Blockly.CUSTOM_INPUT_CHANNEL_SHAPE ){
-      steps = 'm 102.97015380859375 ,8 '+ Blockly.BlockSvg.CUSTOM_TAB_PATH_DOWN + ' v 5';
-  } else {
+  }else {
     steps = 'm -20,0 h 5 ' + Blockly.BlockSvg.NOTCH_PATH_LEFT + ' h 5';
   }
  // console.log(steps);
@@ -363,14 +367,15 @@ Blockly.RenderedConnection.prototype.hideAll = function() {
 Blockly.RenderedConnection.prototype.isConnectionAllowed = function(candidate,
     maxRadius) {
     //console.log("maxRadius is :"+maxRadius);
- // console.log(candidate);
+
   var overall_diff=this.distanceFrom(candidate);
   if(candidate.type=== Blockly.SH_INP_CHANNEL_SHAPE){
-    maxRadius=130;
+   //maxRadius=130;
   }else if(candidate.type=== Blockly.CUSTOM_INPUT_CHANNEL_SHAPE){
-      maxRadius=130;
+     //maxRadius=130;
   }
  // console.log("distance from candidate is :-"+overall_diff);
+    console.log("the candidate length is :"+this.distanceFrom(candidate));
   if (this.distanceFrom(candidate) > maxRadius) {
 
     return false;
@@ -388,6 +393,8 @@ Blockly.RenderedConnection.prototype.isConnectionAllowed = function(candidate,
  */
 Blockly.RenderedConnection.prototype.disconnectInternal_ = function(parentBlock,
     childBlock) {
+  console.log("blocks disconnected");
+  //this.innerCount_=0;
   Blockly.RenderedConnection.superClass_.disconnectInternal_.call(this,
       parentBlock, childBlock);
   // Rerender the parent so that it may reflow.
@@ -433,6 +440,7 @@ Blockly.RenderedConnection.prototype.respawnShadow_ = function() {
  */
 Blockly.RenderedConnection.prototype.neighbours_ = function(maxLimit) {
     //console.log(this.dbOpposite_.getNeighbours);
+    console.log("maximum radius is :"+maxLimit);
   return this.dbOpposite_.getNeighbours(this, maxLimit);
 
 

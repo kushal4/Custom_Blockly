@@ -434,7 +434,7 @@ Blockly.BlockSvg.prototype.snapToGrid = function() {
 Blockly.BlockSvg.prototype.getBoundingRectangle = function() {
   var blockXY = this.getRelativeToSurfaceXY(this);
  // console.log(this);
-  var tab = this.outputConnection ? Blockly.BlockSvg.TAB_WIDTH : 0;
+  var tab = (this.outputConnection) ? Blockly.BlockSvg.TAB_WIDTH : 0;
   var blockBounds = this.getHeightWidth();
   var topLeft;
   var bottomRight;
@@ -1370,8 +1370,8 @@ Blockly.BlockSvg.prototype.setNextStatement = function(newBoolean, opt_check) {
  *     of returned types.  Null or undefined if any type could be returned
  *     (e.g. variable get).
  */
-Blockly.BlockSvg.prototype.setOutput = function(newBoolean, opt_check) {
-  Blockly.BlockSvg.superClass_.setOutput.call(this, newBoolean, opt_check);
+Blockly.BlockSvg.prototype.setOutput =   function(newBoolean, opt_check,custum_right_output) {
+  Blockly.BlockSvg.superClass_.setOutput.call(this, newBoolean, opt_check,custum_right_output);
 //console.log("boolean value is"+newBoolean);
   if (this.rendered) {
     this.render();
@@ -1387,6 +1387,7 @@ Blockly.BlockSvg.prototype.setRightOutput=function (newBoolean, opt_check) {
         this.render();
         this.bumpNeighbours_();
     }
+
 };
 
 /**
@@ -1446,8 +1447,8 @@ Blockly.BlockSvg.prototype.moveNumberedInputBefore = function(
  * @private
  */
 
-Blockly.BlockSvg.prototype.appendInput_ = function(type, name) {
-  var input = Blockly.BlockSvg.superClass_.appendInput_.call(this, type, name);
+Blockly.BlockSvg.prototype.appendInput_ = function(type, name,is_custom) {
+  var input = Blockly.BlockSvg.superClass_.appendInput_.call(this, type, name,is_custom);
 //console.log(this.rendered)
   if (this.rendered) {
     this.render();
@@ -1498,9 +1499,9 @@ Blockly.BlockSvg.prototype.getConnections_ = function(all) {
  * @return {!Blockly.RenderedConnection} A new connection of the specified type.
  * @private
  */
-Blockly.BlockSvg.prototype.makeConnection_ = function(type) {
+Blockly.BlockSvg.prototype.makeConnection_ = function(type,is_custom) {
  // console.log("before new connection rendering");
-  return new Blockly.RenderedConnection(this, type);
+  return new Blockly.RenderedConnection(this, type,is_custom);
 };
 
 /**

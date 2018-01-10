@@ -45,6 +45,7 @@ Blockly.Connection = function(source, type) {
   this.sourceBlock_ = source;
   /** @type {number} */
   this.type = type;
+  this.customConnection=false;
   // Shortcut for the databases for this connection's workspace.
     //console.log("the boolean val of type "+type+" is "+source.workspace.connectionDBList);
   if (source.workspace.connectionDBList) {
@@ -173,6 +174,7 @@ Blockly.Connection.prototype.connect_ = function(childConnection) {
       var connection = Blockly.Connection.lastConnectionInRow_(
           childBlock, orphanBlock);
       if (connection) {
+       // console.log("Output cone")
         orphanBlock.outputConnection.connect(connection);
         orphanBlock = null;
       }
@@ -236,6 +238,10 @@ Blockly.Connection.prototype.connect_ = function(childConnection) {
     event.recordNew();
     Blockly.Events.fire(event);
   }
+};
+Blockly.Connection.prototype.block_type = function () {
+  console.log("the custom type :"+this.customConnection);
+    return this.customConnection;
 };
 
 /**
@@ -436,6 +442,7 @@ Blockly.Connection.connectReciprocally_ = function(first, second) {
  * @private
  */
 Blockly.Connection.singleConnection_ = function(block, orphanBlock) {
+  console.log("single connection block");
   var connection = false;
   for (var i = 0; i < block.inputList.length; i++) {
     var thisConnection = block.inputList[i].connection;
@@ -535,6 +542,8 @@ Blockly.Connection.prototype.respawnShadow_ = function() {
         Blockly.Xml.domToBlock(shadow, parentBlock.workspace);
     if (blockShadow.outputConnection) {
       this.connect(blockShadow.outputConnection);
+    }else if(blockShadow.rightoutputConnection){
+      this.connect(blockShadow.rightoutputConnection);
     } else if (blockShadow.previousConnection) {
       this.connect(blockShadow.previousConnection);
     } else {
@@ -553,6 +562,7 @@ Blockly.Connection.prototype.targetBlock = function() {
   }
   return null;
 };
+Blockly.Connection.prototype.senseChe
 
 /**
  * Is this connection compatible with another connection with respect to the
@@ -608,6 +618,19 @@ Blockly.Connection.prototype.setCheck = function(check) {
   }
   return this;
 };
+Blockly.Connection.prototype.setConCustomBlock=function (Boolean) {
+  this.customConnection=Boolean;
+  //console.log("now type is : "+this.customConnection);
+    //return this;
+}
+
+Blockly.Connection.prototype.setConLineInput=function(Boolean){
+  return this;
+}
+Blockly.Connection.prototype.setConLeftInput=function (Boolean) {
+    return this;
+}
+
 
 /**
  * Change a connection's shadow block.
