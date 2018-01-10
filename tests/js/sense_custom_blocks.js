@@ -22,7 +22,7 @@ $(document).ready(function () {
             //this.setCustomBlock(true);
            // this.setLineInput(true);
             //this.setRightOutput(true, 'Number');
-            console.log(this);
+            //console.log(this);
            // this.set("custom_inp");
             //this.setOutput(true, 'Number');
             //this.setTooltip('');
@@ -39,6 +39,7 @@ $(document).ready(function () {
             this.setLeftInput(true);
             //this.setInputsInline(true);
             this.setColour(120);
+            console.log(this);
             //this.setRightOutput(true, 'Number');
             //this.setTooltip('');
             //this.setHelpUrl('http://www.example.com/');

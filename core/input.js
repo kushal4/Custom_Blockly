@@ -83,7 +83,7 @@ Blockly.Input.prototype.visible_ = true;
  */
 Blockly.Input.prototype.appendField = function(field, opt_name) {
   this.insertFieldAt(this.fieldRow.length, field, opt_name);
-  console.log(this);
+  //console.log(this);
   return this;
 };
 

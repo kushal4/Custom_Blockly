@@ -48,6 +48,7 @@ Blockly.RenderedConnection = function(source, type,is_custom) {
   this.offsetInBlock_ = new goog.math.Coordinate(0, 0);
     this.innerCount_=0;
     this.is_custom_connection=is_custom;
+    //console.log("the custom connection state is "+this.is_custom_connection);
 
 };
 goog.inherits(Blockly.RenderedConnection, Blockly.Connection);
@@ -60,8 +61,8 @@ goog.inherits(Blockly.RenderedConnection, Blockly.Connection);
  * @return {number} The distance between connections, in workspace units.
  */
 Blockly.RenderedConnection.prototype.distanceFrom = function(otherConnection) {
-  console.log("other connection x val is"+otherConnection.x_);
-  console.log("this connection x val is "+this.x_);
+ // console.log("other connection x val is"+otherConnection.x_);
+  //console.log("this connection x val is "+this.x_);
 //console.lo("this connection type is :"+this.type);
 //console.log("the other connection type is :"+otherConnection.type);
   var xDiff = (this.x_) - otherConnection.x_;
@@ -194,9 +195,12 @@ Blockly.RenderedConnection.prototype.tighten_ = function() {
         if (block.type === "custom_input_channel") {
             console.log("translate  Blockly.CUSTOM_INPUT_CHANNEL_SHAPE in x direction : " + (xy.x - (dx)));
             svgRoot.setAttribute('transform',
-                'translate(' + (xy.x - (dx)) + ',' + (xy.y - (dy-6)) + ')');
+                'translate(' + (xy.x - (dx)) + ',' + (xy.y - (dy)) + ')');
             svgRoot.setAttribute('id', 'mycustom');
-        } else {
+        }else if(block.type === "sh_input_channel") {
+            svgRoot.setAttribute('transform',
+                'translate(' + (xy.x - (dx)) + ',' + (xy.y - (dy)) + ')');
+        }else {
             svgRoot.setAttribute('transform',
                 'translate(' + (xy.x - (dx)) + ',' + (xy.y - dy) + ')');
         }
@@ -244,7 +248,8 @@ Blockly.RenderedConnection.prototype.highlight = function() {
   var steps;
    // console.log(this);
     var is_custom_type=this.is_custom_connection;
-    //console.log("is it custom ? "+is_custom_type);
+ //   console.log("is it custom ? "+ is_custom_type);
+    //console.log(this.sourceBlock_);
   if ((this.type === Blockly.INPUT_VALUE ||
       this.type === Blockly.OUTPUT_VALUE )&& (is_custom_type === false) ) {
     steps = 'm 0,0 ' + Blockly.BlockSvg.TAB_PATH_DOWN + ' v 5';
@@ -253,7 +258,7 @@ Blockly.RenderedConnection.prototype.highlight = function() {
   }
 
   if((is_custom_type === true)){
-      steps = 'm 0,8 ' + Blockly.BlockSvg.CUSTOM_TAB_PATH_DOWN + ' v 5';
+      steps = 'm 0,0 ' + Blockly.BlockSvg.CUSTOM_TAB_PATH_DOWN + ' v 5';
   }else {
     steps = 'm -20,0 h 5 ' + Blockly.BlockSvg.NOTCH_PATH_LEFT + ' h 5';
   }
@@ -375,7 +380,7 @@ Blockly.RenderedConnection.prototype.isConnectionAllowed = function(candidate,
      //maxRadius=130;
   }
  // console.log("distance from candidate is :-"+overall_diff);
-    console.log("the candidate length is :"+this.distanceFrom(candidate));
+   // console.log("the candidate length is :"+this.distanceFrom(candidate));
   if (this.distanceFrom(candidate) > maxRadius) {
 
     return false;
@@ -393,7 +398,7 @@ Blockly.RenderedConnection.prototype.isConnectionAllowed = function(candidate,
  */
 Blockly.RenderedConnection.prototype.disconnectInternal_ = function(parentBlock,
     childBlock) {
-  console.log("blocks disconnected");
+ // console.log("blocks disconnected");
   //this.innerCount_=0;
   Blockly.RenderedConnection.superClass_.disconnectInternal_.call(this,
       parentBlock, childBlock);
@@ -479,7 +484,7 @@ Blockly.RenderedConnection.prototype.connect_ = function(childConnection) {
     } else {
       // Child block does not change shape.  Rendering the parent node will
       // move its connected children into position.
-        console.log(parentBlock);
+      //  console.log(parentBlock);
       parentBlock.render();
     }
   }

@@ -1448,8 +1448,8 @@ Blockly.BlockSvg.prototype.moveNumberedInputBefore = function(
  */
 
 Blockly.BlockSvg.prototype.appendInput_ = function(type, name,is_custom) {
-  var input = Blockly.BlockSvg.superClass_.appendInput_.call(this, type, name,is_custom);
-//console.log(this.rendered)
+     var input = Blockly.BlockSvg.superClass_.appendInput_.call(this, type, name,is_custom);
+//console.lg(this.rendered);
   if (this.rendered) {
     this.render();
 
@@ -1496,11 +1496,12 @@ Blockly.BlockSvg.prototype.getConnections_ = function(all) {
 /**
  * Create a connection of the specified type.
  * @param {number} type The type of the connection to create.
+ * @param {Boolean} is_custom check whether the block is of  custom type
  * @return {!Blockly.RenderedConnection} A new connection of the specified type.
  * @private
  */
 Blockly.BlockSvg.prototype.makeConnection_ = function(type,is_custom) {
- // console.log("before new connection rendering");
+    console.log("before new connection rendering" +is_custom);
   return new Blockly.RenderedConnection(this, type,is_custom);
 };
 

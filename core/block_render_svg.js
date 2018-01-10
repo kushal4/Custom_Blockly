@@ -1176,7 +1176,7 @@ steps.push(Blockly.BlockSvg.SH_INP_CUSTOM_TAB_PATH_UP);
     var connectionX = connectionXY.x;
     //var connectionY = connectionXY.y + metrics.height -
       //  Blockly.BlockSvg.CORNER_RADIUS * 2;
-   input[0].connection.setOffsetInBlock(0, -6);
+   input[0].connection.setOffsetInBlock(0, 0);
     steps.push('z');
 }else{
     steps.push('z');
