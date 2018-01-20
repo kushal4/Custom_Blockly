@@ -44,10 +44,12 @@ Blockly.Blocks['procedures_defnoreturn'] = {
     var nameField = new Blockly.FieldTextInput('',
         Blockly.Procedures.rename);
     nameField.setSpellcheck(false);
-    this.appendDummyInput()
-        .appendField(Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE)
-        .appendField(nameField, 'NAME')
-        .appendField('', 'PARAMS');
+      this.appendDummyInput()
+          .appendField(Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE)
+          .appendField(new Blockly.FieldTextInput(name,
+              Blockly.Procedures.rename), 'NAME')
+          .appendField('', 'PARAMS')
+          .appendField(Blockly.Msg.PROCEDURES_DEFNORETURN_DO);
     this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
     if ((this.workspace.options.comments ||
          (this.workspace.options.parentWorkspace &&
@@ -61,7 +63,21 @@ Blockly.Blocks['procedures_defnoreturn'] = {
     this.arguments_ = [];
     this.setStatements_(true);
     this.statementConnection_ = null;
+      this.types_ = [];
+      this.dist_ = [];
+      this.spec_ =[];
+      this.tag = Blockly.Msg.TAG_PROCEDURE_DEFNORETURN;
+      this.setPreviousStatement(true, ["procedures_defnoreturn", "procedures_defreturn", "main_block"]);
+      this.setNextStatement(true, ["procedures_defnoreturn", "procedures_defreturn"]);
   },
+    initName: function() {
+        this.setFieldValue('', 'NAME');
+    },
+
+    getName: function(){
+        return [this.getFieldValue('NAME')];
+    },
+    onchange: Blockly.Blocks.requireOutFunction,
   /**
    * Add or remove the statement block from this function definition.
    * @param {boolean} hasStatements True if a statement block is needed.
@@ -90,34 +106,83 @@ Blockly.Blocks['procedures_defnoreturn'] = {
    */
   updateParams_: function() {
     // Check for duplicated arguments.
-    var badArg = false;
-    var hash = {};
-    for (var i = 0; i < this.arguments_.length; i++) {
-      if (hash['arg_' + this.arguments_[i].toLowerCase()]) {
-        badArg = true;
-        break;
+      var badArg = false;
+      var hash = {};
+      //console.log("cam to update params");
+      ///console.log(this.arguments_.length);
+      for (var i = 0; i < this.arguments_.length; i++) {
+        //  console.log(this.arguments_[i]);
+          if (hash['arg_' + this.arguments_[i].toLowerCase()]) {
+
+              badArg = true;
+              break;
+          }
+           var paramString = '';
+           if (this.arguments_.length) {
+           paramString = Blockly.Msg.PROCEDURES_BEFORE_PARAMS +
+                ' ' + this.arguments_.join(', ');
+        //   console.log(paramString);
+          }
+          hash['arg_' + this.arguments_[i].toLowerCase()] = true;
+          if (this.arguments_.length) {
+              paramString = Blockly.Msg.PROCEDURES_BEFORE_PARAMS;
+
+              for (var x = 0; x < this.arguments_.length; x++) {
+                  if (x == 0) {
+                      if(this.dist_[x]=='v'){
+                          paramString = paramString + ' ' + this.types_[x] + ' ' + this.arguments_[x];
+                      }
+                      else if(this.dist_[x]=='a'){
+                          if(this.spec_[x][0]==1)
+                              paramString = paramString + ' ' + this.types_[x] + ' '+ this.arguments_[x] + '[' + this.spec_[x][1] + ']';
+                          else if(this.spec_[x][0]==2)
+                              paramString = paramString + ' ' + this.types_[x] + ' '+ this.arguments_[x] + '[' + this.spec_[x][1] + ']' + '[' + this.spec_[x][2] + ']';
+                          else if(this.spec_[x][0]==3)
+                              paramString = paramString + ' ' + this.types_[x] + ' '+ this.arguments_[x] + '[' + this.spec_[x][1] + ']' + '[' + this.spec_[x][2] + ']' + '[' + this.spec_[x][3] + ']';
+                      }
+                      else if(this.dist_[x]=='p'){
+                          paramString = paramString + ' ' + this.types_[x] + this.spec_[x] + ' ' + this.arguments_[x];
+                      }
+                  }
+                  else {
+                      if(this.dist_[x]=='v'){
+                          paramString = paramString + ', ' + this.types_[x] + ' ' + this.arguments_[x];
+                      }
+                      else if(this.dist_[x]=='a'){
+                          if(this.spec_[x][0]==1)
+                              paramString = paramString + ' ' + this.types_[x] + ' '+ this.arguments_[x] + '[' + this.spec_[x][1] + ']';
+                          else if(this.spec_[x][0]==2)
+                              paramString = paramString + ' ' + this.types_[x] + ' '+ this.arguments_[x] + '[' + this.spec_[x][1] + ']' + '[' + this.spec_[x][2] + ']';
+                          else if(this.spec_[x][0]==3)
+                              paramString = paramString + ' ' + this.types_[x] + ' '+ this.arguments_[x] + '[' + this.spec_[x][1] + ']' + '[' + this.spec_[x][2] + ']' + '[' + this.spec_[x][3] + ']';
+                      }
+                      else if(this.dist_[x]=='p'){
+                          paramString = paramString + ', ' + this.types_[x] + this.spec_[x] + ' ' + this.arguments_[x];
+                      }
+                  }
+              }
+          //    console.log(paramString);
+          }
       }
-      hash['arg_' + this.arguments_[i].toLowerCase()] = true;
-    }
-    if (badArg) {
-      this.setWarningText(Blockly.Msg.PROCEDURES_DEF_DUPLICATE_WARNING);
-    } else {
-      this.setWarningText(null);
-    }
-    // Merge the arguments into a human-readable list.
-    var paramString = '';
-    if (this.arguments_.length) {
-      paramString = Blockly.Msg.PROCEDURES_BEFORE_PARAMS +
-          ' ' + this.arguments_.join(', ');
-    }
-    // The params field is deterministic based on the mutation,
-    // no need to fire a change event.
-    Blockly.Events.disable();
-    try {
-      this.setFieldValue(paramString, 'PARAMS');
-    } finally {
-      Blockly.Events.enable();
-    }
+      if (badArg) {
+          this.setWarningText(Blockly.Msg.PROCEDURES_DEF_DUPLICATE_WARNING);
+      } else {
+          this.setWarningText(null);
+      }
+      // Merge the arguments into a human-readable list.
+
+      // The params field is deterministic based on the mutation,
+      // no need to fire a change event.
+      Blockly.Events.disable();
+      try {
+       // console.log(paramString);
+if(paramString==undefined){
+    paramString='';
+}
+          this.setFieldValue(paramString, 'PARAMS');
+      } finally {
+          Blockly.Events.enable();
+      }
   },
   /**
    * Create XML to represent the argument inputs.
@@ -128,23 +193,37 @@ Blockly.Blocks['procedures_defnoreturn'] = {
    */
   mutationToDom: function(opt_paramIds) {
     var container = document.createElement('mutation');
+    //console.log(this.getFieldValue('NAME'));
     if (opt_paramIds) {
       container.setAttribute('name', this.getFieldValue('NAME'));
     }
-    for (var i = 0; i < this.arguments_.length; i++) {
-      var parameter = document.createElement('arg');
-      parameter.setAttribute('name', this.arguments_[i]);
-      if (opt_paramIds && this.paramIds_) {
-        parameter.setAttribute('paramId', this.paramIds_[i]);
+      //console.log(this.arguments_.length);
+      for (var x = 0; x < this.arguments_.length; x++) {
+          var parameter = document.createElement('arg');
+          parameter.setAttribute('name', this.arguments_[x]);
+          parameter.setAttribute('types', this.types_[x]);
+          parameter.setAttribute('dist', this.dist_[x]);
+          if(this.dist_[x]=='a'){
+              if(this.spec_[x][0] == 1 ){
+                  parameter.setAttribute('length_1', this.spec_[x][1]);
+              }
+              else if(this.spec_[x][0] == 2){
+                  parameter.setAttribute('length_1', this.spec_[x][1]);
+                  parameter.setAttribute('length_2', this.spec_[x][2]);
+              }
+              else if(this.spec_[x][0] == 3){
+                  parameter.setAttribute('length_1', this.spec_[x][1]);
+                  parameter.setAttribute('length_2', this.spec_[x][2]);
+                  parameter.setAttribute('length_3', this.spec_[x][3]);
+              }
+          }
+          else if(this.dist_[x]=='p'){
+              parameter.setAttribute('iteration', this.spec_[x]);
+          }
+          container.appendChild(parameter);
       }
-      container.appendChild(parameter);
-    }
 
-    // Save whether the statement input is visible.
-    if (!this.hasStatements_) {
-      container.setAttribute('statements', 'false');
-    }
-    return container;
+      return container;
   },
   /**
    * Parse XML to restore the argument inputs.
@@ -158,6 +237,34 @@ Blockly.Blocks['procedures_defnoreturn'] = {
         this.arguments_.push(childNode.getAttribute('name'));
       }
     }
+      for (var x = 0, childNode; childNode = xmlElement.childNodes[x]; x++) {
+          if (childNode.nodeName.toLowerCase() == 'arg') {
+              this.arguments_.push(childNode.getAttribute('name'));
+              this.types_.push(childNode.getAttribute('types'));
+              this.dist_.push(childNode.getAttribute('dist'));
+              if(childNode.getAttribute('dist')=='v'){
+                  this.spec_.push(null);
+              }
+              else if(childNode.getAttribute('dist')=='a'){
+                  var length_1 = childNode.getFieldValue('length_1');
+                  var length_2 = childNode.getFieldValue('length_2');
+                  var length_3 = childNode.getFieldValue('length_3');
+                  length_1 = length_1 * 1;
+                  length_2 = length_2 * 1;
+                  length_3 = length_3 * 1;
+
+                  if (length_1 != 0 && length_2 == 0 && length_3 == 0)
+                      this.spec_.push([1, childNode.getFieldValue('length_1')]);
+                  else if (length_1 != 0 && length_2 != 0 && length_3 == 0)
+                      this.spec_.push([2, childNode.getFieldValue('length_1'), childNode.getFieldValue('length_2')]);
+                  else if (length_1 != 0 && length_2 != 0 && length_3 != 0)
+                      this.spec_.push([3, childNode.getFieldValue('length_1'), childNode.getFieldValue('length_2'), childNode.getFieldValue('length_3')]);
+              }
+              else if(childNode.getAttribute('dist')=='p'){
+                  this.spec_.push(childNode.getAttribute('iteration'));
+              }
+          }
+      }
     this.updateParams_();
     Blockly.Procedures.mutateCallers(this);
 
@@ -171,6 +278,7 @@ Blockly.Blocks['procedures_defnoreturn'] = {
    * @this Blockly.Block
    */
   decompose: function(workspace) {
+  //    console.log("came to input");
     var containerBlock = workspace.newBlock('procedures_mutatorcontainer');
     containerBlock.initSvg();
 
@@ -181,12 +289,24 @@ Blockly.Blocks['procedures_defnoreturn'] = {
     } else {
       containerBlock.getInput('STATEMENT_INPUT').setVisible(false);
     }
+    //  for (var x = 0; x < this.arguments_.length; x++) {
+       //   var paramBlock;
 
     // Parameter list.
     var connection = containerBlock.getInput('STACK').connection;
+   // console.log(this.arguments_.length);
     for (var i = 0; i < this.arguments_.length; i++) {
+      //  console.log(this.arguments_[i]);
+        if(this.dist_[i]==='v'){
+
+            //paramBlock = Blockly.Block.obtain(workspace, 'procedures_mutatorarg');
+          //  paramBlock.initSvg();
+           // paramBlock.setFieldValue(this.arguments_[i], 'NAME');
+            //paramBlock.setFieldValue(this.types_[i], 'TYPES');
+        }
       var paramBlock = workspace.newBlock('procedures_mutatorarg');
       paramBlock.initSvg();
+
       paramBlock.setFieldValue(this.arguments_[i], 'NAME');
       // Store the old location.
       paramBlock.oldLocation = i;
@@ -204,15 +324,44 @@ Blockly.Blocks['procedures_defnoreturn'] = {
    */
   compose: function(containerBlock) {
     // Parameter list.
-    this.arguments_ = [];
-    this.paramIds_ = [];
-    var paramBlock = containerBlock.getInputTargetBlock('STACK');
-    while (paramBlock) {
-      this.arguments_.push(paramBlock.getFieldValue('NAME'));
-      this.paramIds_.push(paramBlock.id);
-      paramBlock = paramBlock.nextConnection &&
-          paramBlock.nextConnection.targetBlock();
-    }
+     // console.log("came to configure block");
+      this.arguments_ = [];
+      this.types_ = [];
+      this.dist_ = [];
+      this.spec_ = [];
+      this.paramIds_ = [];
+      var paramBlock = containerBlock.getInputTargetBlock('STACK');
+      while (paramBlock) {
+          this.arguments_.push(paramBlock.getFieldValue('NAME'));
+          this.types_.push(paramBlock.getFieldValue('TYPES'));
+          this.dist_.push(paramBlock.getDist());
+          if(paramBlock.getDist()==='v'){
+              this.spec_.push(null);
+             // console.log(this.spec_);
+          }
+          else if(paramBlock.getDist()=='a') {
+              var length_1 = paramBlock.getFieldValue('LENGTH_1');
+              var length_2 = paramBlock.getFieldValue('LENGTH_2');
+              var length_3 = paramBlock.getFieldValue('LENGTH_3');
+              var convert_length_1 = length_1 * 1;
+              var convert_length_2 = length_2 * 1;
+              var convert_length_3 = length_3 * 1;
+
+              if (convert_length_1 != 0 && convert_length_2 == 0 && convert_length_3 == 0)
+                  this.spec_.push([1, length_1]);
+              else if (convert_length_1 != 0 && convert_length_2 != 0 && convert_length_3 == 0)
+                  this.spec_.push([2, length_1, length_2]);
+              else if (convert_length_1 != 0 && convert_length_2 != 0 && convert_length_3 != 0)
+                  this.spec_.push([3, length_1, length_2, length_3]);
+
+          }
+          else if(paramBlock.getDist()=='p'){
+              this.spec_.push(paramBlock.getFieldValue('ITERATION'));
+          }
+          this.paramIds_.push(paramBlock.id);
+          paramBlock = paramBlock.nextConnection &&
+              paramBlock.nextConnection.targetBlock();
+      }
     this.updateParams_();
     Blockly.Procedures.mutateCallers(this);
 
@@ -249,16 +398,16 @@ Blockly.Blocks['procedures_defnoreturn'] = {
    * @this Blockly.Block
    */
   getProcedureDef: function() {
-    return [this.getFieldValue('NAME'), this.arguments_, false];
+      return [false, this.getFieldValue('NAME'), this.getFieldValue('TYPES'), this.arguments_, this.types_, this.dist_, this.spec_];
   },
-  /**
-   * Return all variables referenced by this block.
-   * @return {!Array.<string>} List of variable names.
-   * @this Blockly.Block
-   */
-  getVars: function() {
-    return this.arguments_;
-  },
+    /**
+     * Return all variables referenced by this block.
+     * @return {!Array.<string>} List of variable names.
+     * @this Blockly.Block
+     */
+    getVars: function() {
+        return this.arguments_;
+    },
   /**
    * Notification that a variable is renaming.
    * If the name matches one of this block's variables, rename it.
@@ -325,7 +474,18 @@ Blockly.Blocks['procedures_defnoreturn'] = {
       }
     }
   },
-  callType_: 'procedures_callnoreturn'
+    callType_: 'procedures_callnoreturn',
+    /**
+     * return function's parameter information
+     * return type = [type, dist, name, scope, position, specific]
+     * */
+    getParamInfo: function(){
+        var paramList = [];
+        for(var i = 0; i<this.arguments_.length; i++){
+            paramList.push([this.types_[i], this.dist_[i], this.arguments_[i], this.getFieldValue('NAME'), this.getRelativeToSurfaceXY().y, this.spec_[i]]);
+        }
+        return paramList;
+    }
 };
 
 Blockly.Blocks['procedures_defreturn'] = {
@@ -406,14 +566,23 @@ Blockly.Blocks['procedures_mutatorarg'] = {
    */
   init: function() {
     var field = new Blockly.FieldTextInput('x', this.validator_);
-    this.appendDummyInput()
-        .appendField(Blockly.Msg.PROCEDURES_MUTATORARG_TITLE)
-        .appendField(field, 'NAME');
+      var TYPE =
+          [
+              [Blockly.Msg.VARIABLES_SET_TYPE_INT, 'int'],
+              [Blockly.Msg.VARIABLES_SET_TYPE_UNSIGNED_INT, 'unsigned int'],
+              [Blockly.Msg.VARIABLES_SET_TYPE_FLOAT, 'float'],
+              [Blockly.Msg.VARIABLES_SET_TYPE_DOUBLE, 'double'],
+              [Blockly.Msg.VARIABLES_SET_TYPE_CHAR, 'char']];
+      this.appendDummyInput()
+          .appendField('variable')
+          .appendField(new Blockly.FieldDropdown(TYPE), 'TYPES')
+          .appendField(Blockly.Msg.PROCEDURES_MUTATORARG_TITLE)
+          .appendField(new Blockly.FieldTextInput('x', Blockly.Blocks.CNameValidator), 'NAME');
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setColour(Blockly.Blocks.procedures.HUE);
     this.setTooltip(Blockly.Msg.PROCEDURES_MUTATORARG_TOOLTIP);
-    this.contextMenu = false;
+    this.contextMenu = true;
 
     // Create the default variable when we drag the block in from the flyout.
     // Have to do this after installing the field on the block.
@@ -453,7 +622,16 @@ Blockly.Blocks['procedures_mutatorarg'] = {
         workspace.createVariable(newText);
       }
     }
-  }
+  },
+    getTypes: function() {
+        return [this.getFieldValue('TYPES')];
+    },
+    getDist: function() {
+        return 'v';
+    },
+    getSpec: function(){
+        return null;
+    }
 };
 
 Blockly.Blocks['procedures_callnoreturn'] = {
@@ -614,6 +792,7 @@ Blockly.Blocks['procedures_callnoreturn'] = {
             .setAlign(Blockly.ALIGN_RIGHT)
             .appendField(field, 'ARGNAME' + i);
         input.init();
+      //  console.log(input);
       }
     }
     // Remove deleted inputs.

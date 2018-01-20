@@ -1501,7 +1501,7 @@ Blockly.BlockSvg.prototype.getConnections_ = function(all) {
  * @private
  */
 Blockly.BlockSvg.prototype.makeConnection_ = function(type,is_custom) {
-    console.log("before new connection rendering" +is_custom);
+   // console.log("before new connection rendering" +is_custom);
   return new Blockly.RenderedConnection(this, type,is_custom);
 };
 

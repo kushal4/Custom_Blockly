@@ -59,7 +59,9 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
   /** @type {Blockly.Connection} */
   this.outputConnection = null;
   this.rightoutputConnection=false;
-  this.setLineconnection=false;
+  this.LeftLineconnection=false;
+  this.LeftOutConnection= false;
+  this.RightLineconnection=false;
   this.setLeftInpConnection=false;
   this.setCustomBlockConnection=false;
   /** @type {Blockly.Connection} */
@@ -76,7 +78,8 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
   this.tooltip = '';
   /** @type {boolean} */
   this.contextMenu = true;
-
+  this.senseblockConnection=false;
+this.LeftVerticalLen=0;
   /**
    * @type {Blockly.Block}
    * @private
@@ -154,6 +157,7 @@ Blockly.Block = function(workspace, prototypeName, opt_id) {
 
   // Call an initialization function, if it exists.
   if (goog.isFunction(this.init)) {
+   // console.log(this);
     this.init();
   }
   // Record initial inline state.
@@ -435,7 +439,7 @@ Blockly.Block.prototype.getChildren = function() {
  * sense TODO:ADDITION OF THE RIGHT INPUT AS PARENT
  */
 Blockly.Block.prototype.setParent = function(newParent) {
-  console.log(newParent);
+ // console.log(newParent);
   if (newParent == this.parentBlock_) {
     return;
   }
@@ -455,8 +459,8 @@ Blockly.Block.prototype.setParent = function(newParent) {
     // its connection locations.
   } else {
     // Remove this block from the workspace's list of top-most blocks.
-      console.log("remove top block now");
-      console.log(this);
+    //  console.log("remove top block now");
+      //console.log(this);
     this.workspace.removeTopBlock(this);
   }
 
@@ -799,7 +803,7 @@ Blockly.Block.prototype.setNextStatement = function(newBoolean, opt_check) {
  *     (e.g. variable get).
  */
 Blockly.Block.prototype.setOutput = function(newBoolean, opt_check,custom_output) {
-  console.log("the block value is "+newBoolean);
+  //console.log("the block value is "+newBoolean);
   if (newBoolean) {
     if (opt_check === undefined) {
       opt_check = null;
@@ -824,12 +828,19 @@ Blockly.Block.prototype.setOutput = function(newBoolean, opt_check,custom_output
   }
     this.rightoutputConnection=custom_output;
 };
-Blockly.Block.prototype.setLineInput=function(newBoolean){
-  this.setLineconnection=newBoolean;
+Blockly.Block.prototype.setLeftLineInput=function(newBoolean){
+  this.LeftLineconnection=newBoolean;
     //this.setConLineInput(true);
     return this;
 
 };
+Blockly.Block.prototype.setLeftLineOutput =function (newBoolean) {
+    this.LeftOutConnection=true;
+};
+Blockly.Block.prototype.setRightLineInput=function (newBoolean) {
+    this.RightLineconnection=newBoolean;
+    return this;
+}
 Blockly.Block.prototype.setRightOutput=function(newBoolean, opt_check){
 this.rightoutputConnection=newBoolean;
 
@@ -871,10 +882,17 @@ Blockly.Block.prototype.setLeftInput= function (newBoolean) {
 Blockly.Block.prototype.setCustomBlock=function (newBoolean) {
 
 
-
+this.setCustomBlockConnection=true;
     //console.log("custom blockl"+this.setCustomBlockConnection);
     //return this;
    //
+}
+Blockly.Block.prototype.senseBlock=function (newBoolean) {
+    this.senseblockConnection=true;
+}
+
+Blockly.Block.prototype.setLeftVerticalLen=function (vertical_len) {
+    this.LeftVerticalLen=vertical_len;
 }
 /**
  * Set whether value inputs are arranged horizontally or vertically.
@@ -1041,6 +1059,9 @@ Blockly.Block.prototype.appendCstomInpChan=function (opt_name) {
 
 }
 Blockly.Block.prototype.appendSHInpChan=function (opt_name) {
+    return this.appendInput_(Blockly.INPUT_VALUE, (opt_name || ''),true);
+}
+Blockly.Block.prototype.appendInpChannel=function (opt_name) {
     return this.appendInput_(Blockly.INPUT_VALUE, (opt_name || ''),true);
 }
 
@@ -1538,6 +1559,7 @@ Blockly.Block.prototype.moveBy = function(dx, dy) {
   goog.asserts.assert(!this.parentBlock_, 'Block has parent.');
   var event = new Blockly.Events.BlockMove(this);
   this.xy_.translate(dx, dy);
+  console.log("this is called to move");
   event.recordNew();
   Blockly.Events.fire(event);
 };

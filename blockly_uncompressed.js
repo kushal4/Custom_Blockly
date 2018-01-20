@@ -8,7 +8,7 @@ if (isNodeJS) {
   var window = {};
   require('closure-library');
 }
-
+//console.log(isNodeJS);
 window.BLOCKLY_DIR = (function() {
   if (!isNodeJS) {
     // Find name of current directory.

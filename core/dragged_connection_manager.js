@@ -40,7 +40,7 @@ goog.require('goog.math.Coordinate');
  */
 Blockly.DraggedConnectionManager = function(block) {
   Blockly.selected = block;
- // console.log(block);
+ //console.log(block);
 
   /**
    * The top block in the stack being dragged.
@@ -234,7 +234,7 @@ Blockly.DraggedConnectionManager.prototype.updateClosest_ = function(dxy) {
   for (var i = 0; i < this.availableConnections_.length; i++) {
     var myConnection = this.availableConnections_[i];
     var neighbour = myConnection.closest(this.radiusConnection_, dxy);
-//   console.log(myConnection);
+// console.log(myConnection);
      // console.log(neighbour.connection);
     if (neighbour.connection) {
 
