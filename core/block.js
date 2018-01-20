@@ -1629,3 +1629,14 @@ Blockly.Block.prototype.toDevString = function() {
   }
   return msg;
 };
+
+Blockly.Block.prototype.getField_ = function(name) {
+    for (var x = 0, input; input = this.inputList[x]; x++) {
+        for (var y = 0, field; field = input.fieldRow[y]; y++) {
+            if (field.name === name) {
+                return field;
+            }
+        }
+    }
+    return null;
+};
