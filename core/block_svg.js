@@ -679,10 +679,12 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
     if (nextBlock) {
       // Blocks in the current stack would survive this block's deletion.
       descendantCount -= nextBlock.getDescendants().length;
+
     }
+      //console.log("next block with total block count"+descendantCount);
     var deleteOption = {
-      text: descendantCount == 1 ? Blockly.Msg.DELETE_BLOCK :
-          Blockly.Msg.DELETE_X_BLOCKS.replace('%1', String(descendantCount)),
+      text: (descendantCount == 1 ? Blockly.Msg.DELETE_BLOCK :
+          Blockly.Msg.DELETE_X_BLOCKS.replace('%1', String(descendantCount))),
       enabled: true,
       callback: function() {
         Blockly.Events.setGroup(true);
@@ -702,8 +704,10 @@ Blockly.BlockSvg.prototype.showContextMenu_ = function(e) {
   };
   menuOptions.push(helpOption);
 
+
   // Allow the block to add or modify menuOptions.
   if (this.customContextMenu) {
+      //console.log(menuOptions);
     this.customContextMenu(menuOptions);
   }
 
@@ -1501,7 +1505,7 @@ Blockly.BlockSvg.prototype.getConnections_ = function(all) {
  * @private
  */
 Blockly.BlockSvg.prototype.makeConnection_ = function(type,is_custom) {
-    console.log("before new connection rendering" +is_custom);
+   // console.log("before new connection rendering" +is_custom);
   return new Blockly.RenderedConnection(this, type,is_custom);
 };
 

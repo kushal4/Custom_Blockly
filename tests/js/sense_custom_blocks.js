@@ -1,53 +1,127 @@
 
 $(document).ready(function () {
+   // console.log("this is workspace");
     var count_of_create_fired = 0;
     //alert(Blockly.Msg.TEXT_LENGTH_TITLE);
     var file_name_json = {};
     var Require_block, file_block;
+    var check_multi_inp=false;
+   // $( "#panel-heading" ).click(function() {
+     //   alert( "Handler for .click() called." );
+   // });
 
+//Blockly.Constants.Math.MUTATOR_MIXING={
+   // update:function () {
+     //   console.log("updated");
+   // }
+//};
+    Blockly.Blocks['math_representation']={
+        init: function() {
+            var math_rep_type= [["floor","FLOOR"],
+                ["ciel","CIEL"],
+                ["factorial","FACTORIAL"],
+                ["copysign","COPYSIGN"],
+                ["fmod","FMOD"],
+                ["frexp","FREXP"],
+                ["isnan","ISNAN"],
+                ["isinf","ISINF"],
+                ["ldexp","LDEXP"],
+                ["pow","POW"],
+                ["gcd","GCD"],
+             ["trunc","TRUNC"]];
+            this.appendValueInput("A")
+                .appendField(new Blockly.FieldDropdown(math_rep_type), 'math_dropdwn');
+           // var thisBlock=this;
+            this.setInputsInline(true);
+            this.setOutput(true);
+            this.setColour(230);
+        },
+        onchange:function () {
+           // this.appendValueInput("new_add");
+            var thisBlock=this;
+            this.getField('math_dropdwn').setValidator(function(option) {
+//this.sourceBlock_.update();
+                var check_op_inp = ((option === 'FMOD'||option ==='COPYSIGN'||option=== 'POW'||option=== 'GCD'));
+             //   console.log(option);
+               // this.sourceBlock_.updateShape_(divisorInput);
+                var inputExists = thisBlock.getInput('sense_B');
 
+                if(check_op_inp){
+                    console.log(thisBlock.getInput('sense_B'));
+                  //  console.loifg(thisBlock);
 
-    Blockly.Blocks['custom_input_channel'] = {
-        init: function () {
-            file_block = this;
+                    if(!inputExists) {
+                        thisBlock.appendValueInput("sense_B")
+                            .appendField(",", "math_com")
+                            .setCheck('Number');
+                    }
+                    }else  if (inputExists) {
+                    console.log("input exists");
+                    thisBlock.removeInput('sense_B');
+                }
 
-            this.appendCstomInpChan("custom_block").setCheck(true)
-                .appendField("InpChannel", "paho_chan");
-            this.setCustomBlock(true);
-            this.setRightOutput(true, 'Number');
-            this.setLineInput(true);
+                    //thisBlock.getFieldValue("B")
+                //}
 
-
-            this.setColour(120);
-            //this.setCustomBlock(true);
-           // this.setLineInput(true);
-            //this.setRightOutput(true, 'Number');
-            //console.log(this);
-           // this.set("custom_inp");
-            //this.setOutput(true, 'Number');
-            //this.setTooltip('');
-            //this.setHelpUrl('http://www.example.com/');
+              //  console.log("dropdown val changed");
+            });
         }
+
     };
-    Blockly.Blocks['sh_input_channel'] = {
+    Blockly.Blocks['math_angular']={
+        init: function() {
+          var math_angular_type=[
+              ['degrees','DEGREES'],
+              ['radians','RADIANS']
+          ]
+            this.appendValueInput("NUM")
+                .appendField(new Blockly.FieldDropdown(math_angular_type), 'math_ang_drpdwn');
+            this.setInputsInline(true);
+            this.setOutput(true);
+            this.setColour(230);
+        }
+
+    };
+ //   function myfunc() {
+    //   $("#code_segment").empty();
+   // }
+  //  var new_prog=document.getElementById("new_program");
+    //new_prog.addEventListener("click",myfunc);
+//console.log(window.location.href.charAt((window.location.href.length)-1) );
+
+    Blockly.Blocks['Max'] = {
         init: function () {
             file_block = this;
 
-            this.appendSHInpChan("custom_block").setCheck(false).appendField("ShChannel", "sh_chan");
+            this.appendSHInpChan("custom_block").setCheck(false).appendField("Max","max_info").appendField(new Blockly.FieldTextInput("    "), "CUstom_NAME");
             this.setCustomBlock(true);
             this.setRightOutput(true, 'Number');
             this.setLeftInput(true);
             //this.setInputsInline(true);
             this.setColour(120);
-            console.log(this);
+           // console.log(this);
+            //this.setRightOutput(true, 'Number');
+            this.setTooltip('hello');
+            //this.setHelpUrl('http://www.example.com/');
+        }
+    };
+
+    Blockly.Blocks['Min'] = {
+        init: function () {
+            file_block = this;
+
+            this.appendSHInpChan("custom_block").setCheck(false).appendField("Min","min_info").appendField(new Blockly.FieldTextInput("    "), "CUstom_NAME");
+            this.setCustomBlock(true);
+            this.setRightOutput(true, 'Number');
+            this.setLeftInput(true);
+            //this.setInputsInline(true);
+            this.setColour(120);
+           // console.log(this);
             //this.setRightOutput(true, 'Number');
             //this.setTooltip('');
             //this.setHelpUrl('http://www.example.com/');
         }
     };
-
-
-
          Blockly.Blocks['require_file'] = {
                 init: function () {
                     //Require_block=this;
@@ -57,12 +131,13 @@ $(document).ready(function () {
                     this.setInputsInline(false);
                     this.setOutput(true, 'Number');
                     this.setColour(65);
-                    // this.setTooltip('');
+                     this.setTooltip('dsgsdgsd');
                     //this.setHelpUrl('http://www.example.com/');
                 }
             };
+
     //Require_block = Blockly.Blocks['require_file'];
-    Blockly.JavaScript['require_file'] = function (block) {
+    Blockly.Python['require_file'] = function (block) {
         // String or array length.
         var argument0 = Blockly.JavaScript.valueToCode(block, 'VALUE',
             Blockly.JavaScript.ORDER_FUNCTION_CALL) || '\'\'';
@@ -90,58 +165,55 @@ $(document).ready(function () {
         }
     };
 */
-    file_block = Blockly.Blocks['custom_input_channel'];
-    Blockly.JavaScript['file_name'] = function () {
-        var code = '../n';
-        return code;
-    }
-    Blockly.JavaScript['file_text_name'] = function () {
-        var code = '../n';
-        return code;
-    }
-  //  var joined_block = Blockly.Blocks['join_blocks'];
-   // console.log(joined_block);
-  //  Blockly.JavaScript['join_blocks'] = function () {
-    //    var code = '.../n';
-     //   return code;
-   // }
+   Blockly.Blocks['conditioner'] = {
+       init : function () {
+           var options = [['max', 'Max'], ['min', 'Min'],['floor','Floor'],['ceil','Ceil'],['sin','Sin'],['cos','Cos'],['tan','Tan']];
+           this.appendValueInput("sense_conditioner").
+           appendField(new Blockly.FieldDropdown(options), 'sense_condition')
+               .appendField(new Blockly.FieldTextInput(""), "stat_inp");
+           this.setOutput(true,'Number');
+           this.senseBlock(true);
+           this.setColour(85);
+           this.setLeftVerticalLen(8);
 
+       }
+   };
+   Blockly.Blocks['Input_Channel'] ={
+       init : function () {
+           this.appendValueInput("custom_block").setCheck(true)
+               .appendField("InpChannel", "paho_chan");
+           this.setOutput(true);
+           this.senseBlock(true);
+           this.setColour(65);
+         //  this.setLeftVerticalLen(8);
+           this.setRightLineInput(true);
+           this.setLeftVerticalLen(8);
+          // this.setMutator(new Blockly.Mutator(['procedures_mutatorarg']));
+       }//,//,
+       //onchange : function () {
+        //   console.log("changed");
+       //}
+      // decompose: function(workspace) {
+          //   console.log(workspace);
+      // }
 
-    var selected_file_name_value;
-  //  var workspace = Blockly.inject('blocklyDiv', //this  includes the workspace inside the blocklydiv
-     //   {toolbox: document.getElementById('toolbox')});
-    //var defaultBlocks = document.getElementById('blocklyDefault');
-   /// Blockly.Xml.domToWorkspace(defaultBlocks, workspace);
-    // var parentBlock = Blockly.Block.obtain(Blockly.getMainWorkspace(), 'require_file');
-    // parentBlock.initSvg();
-    // parentBlock.render();
-
-    // var childBlock = Blockly.Block.obtain(Blockly.getMainWorkspace(), 'file_name');
-    //childBlock.setFieldValue('Hello', 'TEXT');
-    //  childBlock.initSvg();
-    // childBlock.render();
-
-    //parentConnection.connect(childConnection);
-    /// var parentConnection = parentBlock.getInput('req');
-    // console.log(parentConnection);
-    //console.log(parentBlock);
-    Blockly.mainWorkspace.clear();//clear the workspace if any code is present at the start
-    // var parentBlock = Blockly.Block.obtain(Blockly.getMainWorkspace(), 'require_file');
-    // parentBlock.initSvg();
-    //  parentBlock.render();
-
-    //  var childBlock = Blockly.Block.obtain(Blockly.getMainWorkspace(), 'file_name');
-    //  childBlock.initSvg();
-    //childBlock.setFieldValue('program_name', '');
-    //  childBlock.render();
-    //console.log(childBlock);
-    // var parentConnection = parentBlock.getInput('Req').connection;
-    // var childConnection = childBlock.outputConnection;
-    // parentConnection.connect(childConnection);
-    //  // console.log(Require_block.nextConnection);
-    //console.log(file_block);
-    // Require_block.nextConnection.connect(file_block.previousConnection);
-    //$('#languageDropdown').change(myUpdateFunction);
+   };
+   Blockly.Blocks['Output_Channel']= {
+       init: function () {
+           //Require_block=this;
+           this.appendValueInput("Req")
+               .setCheck(null)
+               .appendField("OUtchannel", "res");
+           //this.setInputsInline(false);
+           this.setLeftLineOutput(true);
+           this.senseBlock(true);
+           this.setOutput(true);
+           this.setColour(65);
+           this.setLeftVerticalLen(9);
+         //  this.setTooltip('dsgsdgsd');
+           //this.setHelpUrl('http://www.example.com/');
+       }
+   };
 
 
 });

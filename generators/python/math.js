@@ -56,11 +56,13 @@ Blockly.Python['math_arithmetic'] = function(block) {
     'MINUS': [' - ', Blockly.Python.ORDER_ADDITIVE],
     'MULTIPLY': [' * ', Blockly.Python.ORDER_MULTIPLICATIVE],
     'DIVIDE': [' / ', Blockly.Python.ORDER_MULTIPLICATIVE],
+      'NUMDIVIDE':[' // ',Blockly.Python.ORDER_MULTIPLICATIVE],
     'POWER': [' ** ', Blockly.Python.ORDER_EXPONENTIATION]
   };
   var tuple = OPERATORS[block.getFieldValue('OP')];
   var operator = tuple[0];
   var order = tuple[1];
+  //console.log("the tuple array  is "+tuple);
   var argument0 = Blockly.Python.valueToCode(block, 'A', order) || '0';
   var argument1 = Blockly.Python.valueToCode(block, 'B', order) || '0';
   var code = argument0 + operator + argument1;
@@ -76,7 +78,7 @@ Blockly.Python['math_single'] = function(block) {
   // Math operators with single operand.
   var operator = block.getFieldValue('OP');
   var code;
-  var arg;
+  var arg,arg_1;
   if (operator == 'NEG') {
     // Negation is a special case given its different operator precedence.
     var code = Blockly.Python.valueToCode(block, 'NUM',
@@ -87,7 +89,13 @@ Blockly.Python['math_single'] = function(block) {
   if (operator == 'SIN' || operator == 'COS' || operator == 'TAN') {
     arg = Blockly.Python.valueToCode(block, 'NUM',
         Blockly.Python.ORDER_MULTIPLICATIVE) || '0';
-  } else {
+  }else if(operator === 'ATAN2'||operator === 'HYPOT'  ){
+     // console.log("came here for atan2");
+      arg = Blockly.Python.valueToCode(block, 'NUM',
+          Blockly.Python.ORDER_MULTIPLICATIVE) || '0';
+      arg_1=Blockly.Python.valueToCode(block,'DIVISOR',
+          Blockly.Python.ORDER_MULTIPLICATIVE) || '0';
+  }else{
     arg = Blockly.Python.valueToCode(block, 'NUM',
         Blockly.Python.ORDER_NONE) || '0';
   }
@@ -106,9 +114,15 @@ Blockly.Python['math_single'] = function(block) {
     case 'LOG10':
       code = 'math.log10(' + arg + ')';
       break;
+      case 'LOG1P':
+          code='math.log1p('+ arg + ')';
+          break;
     case 'EXP':
       code = 'math.exp(' + arg + ')';
       break;
+      case 'EXPM1':
+          code='math.expm1('+ arg + ')';
+          break;
     case 'POW10':
       code = 'math.pow(10,' + arg + ')';
       break;
@@ -146,6 +160,12 @@ Blockly.Python['math_single'] = function(block) {
     case 'ATAN':
       code = 'math.atan(' + arg + ') / math.pi * 180';
       break;
+      case 'ATAN2':
+          code= 'math.atan2('+ arg+','+arg_1+') / math.pi * 180';
+          break;
+      case 'HYPOT' :
+          code = 'math.hypot('+ arg +','+arg_1+') / math.pi * 180 ';
+          break;
     default:
       throw 'Unknown math operator: ' + operator;
   }

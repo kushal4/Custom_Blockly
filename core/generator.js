@@ -219,6 +219,7 @@ Blockly.Generator.prototype.valueToCode = function(block, name, outerOrder) {
     return '';
   }
   var tuple = this.blockToCode(targetBlock);
+  //console.log(tuple);
   if (tuple === '') {
     // Disabled block.
     return '';

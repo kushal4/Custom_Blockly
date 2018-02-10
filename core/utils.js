@@ -47,8 +47,12 @@ goog.require('goog.userAgent');
  * accessible before javascript loads!
  * @return {!Object<string, string>}
  * @private
+ * //TODO:FIND  goog.global['Blockly']['Msg']  and
+ * // TODO:inser goog.global['Blockly']['Msg']['LOG1P']="%{BKY_MATH_SINGLE_TOOLTIP_LOG1P}
+ * //into it
  */
 Blockly.utils.getMessageArray_ = function() {
+    goog.global['Blockly']['Msg']['LOG1P']="%{BKY_MATH_SINGLE_TOOLTIP_LOG1P}";
   return goog.global['Blockly']['Msg'];
 };
 

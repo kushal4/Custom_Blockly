@@ -35,3 +35,38 @@ goog.provide('Blockly.Blocks');
  * @type {!Object<string,Object>}
  */
 Blockly.Blocks = new Object(null);
+
+/*
+ The Function to set warning text and show it when the block
+ that must be in function is out of function.
+ */
+Blockly.Blocks.requireInFunction = function(block) {
+    if(!block) {
+        if (!this.workspace) {
+            // Block has been deleted.
+            return;
+        }
+        if (this.getSurroundParent()) {
+            this.setWarningText(null);
+        } else {
+            this.setWarningText(Blockly.Msg.PLZ_INSIDE_FUNCTION);
+        }
+    }
+    else {
+        if (!block.workspace) {
+            // Block has been deleted.
+            return;
+        }
+        if (block.getSurroundParent()) {
+            block.setWarningText(null);
+        } else {
+            block.setWarningText(Blockly.Msg.PLZ_INSIDE_FUNCTION);
+        }
+    }
+};
+/*
+ The Function to check if variable, array, #define, or pointer declare block's position is legal or illegal.
+ */
+
+
+

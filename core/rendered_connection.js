@@ -44,6 +44,7 @@ Blockly.RenderedConnection = function(source, type,is_custom) {
    * @type {!goog.math.Coordinate}
    * @private
    */
+  //console.log(this);
   //console.log("rendered connection called");
   this.offsetInBlock_ = new goog.math.Coordinate(0, 0);
     this.innerCount_=0;
@@ -193,7 +194,7 @@ Blockly.RenderedConnection.prototype.tighten_ = function() {
     var xy = Blockly.utils.getRelativeXY(svgRoot);
     //if(this.innerCount_ < 1) {
         if (block.type === "custom_input_channel") {
-            console.log("translate  Blockly.CUSTOM_INPUT_CHANNEL_SHAPE in x direction : " + (xy.x - (dx)));
+           // console.log("translate  Blockly.CUSTOM_INPUT_CHANNEL_SHAPE in x direction : " + (xy.x - (dx)));
             svgRoot.setAttribute('transform',
                 'translate(' + (xy.x - (dx)) + ',' + (xy.y - (dy)) + ')');
             svgRoot.setAttribute('id', 'mycustom');
@@ -251,15 +252,16 @@ Blockly.RenderedConnection.prototype.highlight = function() {
  //   console.log("is it custom ? "+ is_custom_type);
     //console.log(this.sourceBlock_);
   if ((this.type === Blockly.INPUT_VALUE ||
-      this.type === Blockly.OUTPUT_VALUE )&& (is_custom_type === false) ) {
-    steps = 'm 0,0 ' + Blockly.BlockSvg.TAB_PATH_DOWN + ' v 5';
+      this.type === Blockly.OUTPUT_VALUE )) {
+      if((is_custom_type === true)){
+          steps = 'm 0,0 ' + Blockly.BlockSvg.CUSTOM_TAB_PATH_DOWN + ' v 8';
+      }else{
+          steps = 'm 0,0 ' + Blockly.BlockSvg.TAB_PATH_DOWN + ' v 5';
+      }
+
    // console.log(this.set)
 
-  }
-
-  if((is_custom_type === true)){
-      steps = 'm 0,0 ' + Blockly.BlockSvg.CUSTOM_TAB_PATH_DOWN + ' v 5';
-  }else {
+  } else {
     steps = 'm -20,0 h 5 ' + Blockly.BlockSvg.NOTCH_PATH_LEFT + ' h 5';
   }
  // console.log(steps);

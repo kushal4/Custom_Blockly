@@ -360,6 +360,8 @@ Blockly.Msg.MATH_SUBTRACTION_SYMBOL = '-';
 /// {{optional}}\nmath - The binary operation indicating that the left operand should be divided by
 /// the right operand.
 Blockly.Msg.MATH_DIVISION_SYMBOL = '÷';
+
+Blockly.Msg.MATH_NUM_DIVISION_SYMBOL= 'num ÷';
 /// {{optional}}\nmath - The symbol for the binary operation multiplication.
 Blockly.Msg.MATH_MULTIPLICATION_SYMBOL = '×';
 /// {{optional}}\nmath - The symbol for the binary operation exponentiation.  Specifically, if the
@@ -386,6 +388,9 @@ Blockly.Msg.MATH_TRIG_ACOS = 'acos';
 /// [https://en.wikipedia.org/wiki/Trigonometric_functions#Sine.2C_cosine_and_tangent tangent].
 Blockly.Msg.MATH_TRIG_ATAN = 'atan';
 
+Blockly.Msg.MATH_TRIG_ATAN2= 'atan2';
+Blockly.Msg.MATH_TRIG_HYPOT= 'hypot';
+
 /// url - Information about addition, subtraction, multiplication, division, and exponentiation.
 Blockly.Msg.MATH_ARITHMETIC_HELPURL = 'https://en.wikipedia.org/wiki/Arithmetic';
 /// tooltip - See [https://en.wikipedia.org/wiki/Addition https://en.wikipedia.org/wiki/Addition].
@@ -396,6 +401,7 @@ Blockly.Msg.MATH_ARITHMETIC_TOOLTIP_MINUS = 'Return the difference of the two nu
 Blockly.Msg.MATH_ARITHMETIC_TOOLTIP_MULTIPLY = 'Return the product of the two numbers.';
 /// tooltip - See [https://en.wikipedia.org/wiki/Division_(mathematics) https://en.wikipedia.org/wiki/Division_(mathematics)].
 Blockly.Msg.MATH_ARITHMETIC_TOOLTIP_DIVIDE = 'Return the quotient of the two numbers.';
+Blockly.Msg.MATH_ARITHMETIC_TOOLTIP_NUM_DIVIDE = 'return the integral quotient of the two numbers .';
 /// tooltip - See [https://en.wikipedia.org/wiki/Exponentiation https://en.wikipedia.org/wiki/Exponentiation].
 Blockly.Msg.MATH_ARITHMETIC_TOOLTIP_POWER = 'Return the first number raised to the power of the second number.';
 
@@ -403,6 +409,12 @@ Blockly.Msg.MATH_ARITHMETIC_TOOLTIP_POWER = 'Return the first number raised to t
 Blockly.Msg.MATH_SINGLE_HELPURL = 'https://en.wikipedia.org/wiki/Square_root';
 /// dropdown - This computes the positive [https://en.wikipedia.org/wiki/Square_root square root] of its input.  For example, the square root of 16 is 4.
 Blockly.Msg.MATH_SINGLE_OP_ROOT = 'square root';
+/*
+* Add your own Custom option messages implementation here *sense*
+*
+* */
+Blockly.Msg.MATH_SINGLE_OP_ATAN2='atan2';
+Blockly.Msg.MATH_SINGLE_OP_HYPOT='hypot';
 /// tooltip - Please use the same term as in the previous message.
 Blockly.Msg.MATH_SINGLE_TOOLTIP_ROOT = 'Return the square root of a number.';
 /// dropdown - This leaves positive numeric inputs changed and inverts negative inputs.  For example, the absolute value of 5 is 5; the absolute value of -5 is also 5.  For more information, see [https://en.wikipedia.org/wiki/Absolute_value https://en.wikipedia.org/wiki/Absolute_value].
@@ -435,6 +447,8 @@ Blockly.Msg.MATH_TRIG_TOOLTIP_ASIN = 'Return the arcsine of a number.';
 Blockly.Msg.MATH_TRIG_TOOLTIP_ACOS = 'Return the arccosine of a number.';
 /// tooltip - The [https://en.wikipedia.org/wiki/Inverse_trigonometric_functions inverse] of the [https://en.wikipedia.org/wiki/Cosine#Sine.2C_cosine_and_tangent tangent] function, using [https://en.wikipedia.org/wiki/Degree_(angle) degrees], not radians.
 Blockly.Msg.MATH_TRIG_TOOLTIP_ATAN = 'Return the arctangent of a number.';
+Blockly.Msg.MATH_TRIG_TOOLTIP_ATAN2= 'Return atan(y / x), in radians.  ';
+Blockly.Msg.MATH_TRIG_TOOLTIP_HYPOT= 'Return the Euclidean norm, sqrt(x*x + y*y) .';
 
 /// url - Information about the mathematical constants Pi (π), e, the golden ratio (φ), √ 2, √ 1/2, and infinity (∞).
 Blockly.Msg.MATH_CONSTANT_HELPURL = 'https://en.wikipedia.org/wiki/Mathematical_constant';
@@ -828,6 +842,7 @@ Blockly.Msg.LISTS_CREATE_WITH_HELPURL = 'https://github.com/google/blockly/wiki/
 Blockly.Msg.LISTS_CREATE_WITH_TOOLTIP = 'Create a list with any number of items.';
 /// block text - See [https://github.com/google/blockly/wiki/Lists#create-list-with https://github.com/google/blockly/wiki/Lists#create-list-with].
 Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH = 'create list with';
+Blockly.Msg.LISTS_CREATE_WITH_ARRAY= 'create num list with';
 /// block text - This appears in a sub-block when [https://github.com/google/blockly/wiki/Lists#changing-number-of-inputs changing the number of inputs in a ''''create list with'''' block].\n{{Identical|List}}
 Blockly.Msg.LISTS_CREATE_WITH_CONTAINER_TITLE_ADD = 'list';
 /// tooltip - See [https://github.com/google/blockly/wiki/Lists#changing-number-of-inputs https://github.com/google/blockly/wiki/Lists#changing-number-of-inputs].
@@ -1084,6 +1099,7 @@ Blockly.Msg.VARIABLES_GET_TOOLTIP = 'Returns the value of this variable.';
 /// context menu - Selecting this creates a block to set (change) the value of this variable.
 /// \n\nParameters:\n* %1 - the name of the variable.
 Blockly.Msg.VARIABLES_GET_CREATE_SET = 'Create "set %1"';
+Blockly.Msg.VARIABLES_GET_ARR= 'Create "arr %1"';
 
 /// url - Information about ''variables'' in computer programming.  Consider using your language's translation of [https://en.wikipedia.org/wiki/Variable_(computer_science) https://en.wikipedia.org/wiki/Variable_(computer_science)], if it exists.
 Blockly.Msg.VARIABLES_SET_HELPURL = 'https://github.com/google/blockly/wiki/Variables#set';
@@ -1095,6 +1111,7 @@ Blockly.Msg.VARIABLES_SET_TOOLTIP = 'Sets this variable to be equal to the input
 /// this variable.\n\nParameters:\n* %1 - the name of the variable.
 Blockly.Msg.VARIABLES_SET_CREATE_GET = 'Create "get %1"';
 
+Blockly.Msg.VARIABLES_ARR= ' %1 %2';
 // Procedures Blocks.
 /// url - Information about defining [https://en.wikipedia.org/wiki/Subroutine functions] that do not have return values.
 Blockly.Msg.PROCEDURES_DEFNORETURN_HELPURL = 'https://en.wikipedia.org/wiki/Subroutine';

@@ -42,5 +42,20 @@ Blockly.Python['variables_set'] = function(block) {
       Blockly.Python.ORDER_NONE) || '0';
   var varName = Blockly.Python.variableDB_.getName(block.getFieldValue('VAR'),
       Blockly.Variables.NAME_TYPE);
+   // console.log("the second val is "+argument0);
+
   return varName + ' = ' + argument0 + '\n';
+
+};
+Blockly.Python['variables_arr'] = function(block) {
+    // Variable setter.
+    //console.log(block.getFieldValue('EMPTY'));
+    var code = Blockly.Python.variableDB_.getName(block.getFieldValue('VAR'),
+        Blockly.Variables.NAME_TYPE)+"["+block.getFieldValue('VAR_ARR')+"]";
+    //var varName = Blockly.Python.variableDB_.getName(block.getFieldValue('VAR'),
+      //  Blockly.Variables.NAME_TYPE);
+    // console.log("the second val is "+argument0);
+
+    return [code, Blockly.Python.ORDER_ATOMIC];
+
 };

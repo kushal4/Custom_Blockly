@@ -183,6 +183,7 @@ Blockly.ContextMenu.callbackFactory = function(block, xml) {
     Blockly.Events.disable();
     try {
       var newBlock = Blockly.Xml.domToBlock(xml, block.workspace);
+     // console.log(newBlock);
       // Move the new block next to the old block.
       var xy = block.getRelativeToSurfaceXY();
       if (block.RTL) {
@@ -198,6 +199,7 @@ Blockly.ContextMenu.callbackFactory = function(block, xml) {
     if (Blockly.Events.isEnabled() && !newBlock.isShadow()) {
       Blockly.Events.fire(new Blockly.Events.BlockCreate(newBlock));
     }
+    console.log(newBlock);
     newBlock.select();
   };
 };
