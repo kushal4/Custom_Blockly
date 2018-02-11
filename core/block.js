@@ -1064,6 +1064,7 @@ Blockly.Block.prototype.appendSHInpChan=function (opt_name) {
 Blockly.Block.prototype.appendInpChannel=function (opt_name) {
     return this.appendInput_(Blockly.INPUT_VALUE, (opt_name || ''),true);
 }
+Blockly.Block.prototype.list_count=3;
 
 /**
  * Initialize this block using a cross-platform, internationalization-friendly

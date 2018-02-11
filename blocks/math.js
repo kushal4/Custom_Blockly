@@ -80,7 +80,8 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
           ["%{BKY_MATH_SUBTRACTION_SYMBOL}", "MINUS"],
           ["%{BKY_MATH_MULTIPLICATION_SYMBOL}", "MULTIPLY"],
           ["%{BKY_MATH_DIVISION_SYMBOL}", "DIVIDE"],
-          ["%{BKY_MATH_POWER_SYMBOL}", "POWER"]
+            ["%{BKY_MATH_NUM_DIVISION_SYMBOL}", "NUMDIVIDE"],
+                ["%{BKY_MATH_POWER_SYMBOL}", "POWER"]
         ]
       },
       {
@@ -109,8 +110,10 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
           ["%{BKY_MATH_SINGLE_OP_ABSOLUTE}", 'ABS'],
           ['-', 'NEG'],
           ['ln', 'LN'],
+            ['log1p','LOG1P'],
           ['log10', 'LOG10'],
           ['e^', 'EXP'],
+            ['e^x -1','EXPM1'],
           ['10^', 'POW10']
         ]
       },
@@ -140,7 +143,9 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
           ["%{BKY_MATH_TRIG_TAN}", "TAN"],
           ["%{BKY_MATH_TRIG_ASIN}", "ASIN"],
           ["%{BKY_MATH_TRIG_ACOS}", "ACOS"],
-          ["%{BKY_MATH_TRIG_ATAN}", "ATAN"]
+          ["%{BKY_MATH_TRIG_ATAN}", "ATAN"],
+            ["%{BKY_MATH_TRIG_ATAN2}", "ATAN2"],
+            ["%{BKY_MATH_TRIG_HYPOT}", "HYPOT"]
         ]
       },
       {
@@ -152,6 +157,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     "output": "Number",
     "colour": "%{BKY_MATH_HUE}",
     "helpUrl": "%{BKY_MATH_TRIG_HELPURL}",
+      "mutator": "math_is_divisibleby_mutator",
     "extensions": ["math_op_tooltip"]
   },
 
@@ -391,6 +397,7 @@ Blockly.Constants.Math.TOOLTIPS_BY_OP = {
   'MINUS': '%{BKY_MATH_ARITHMETIC_TOOLTIP_MINUS}',
   'MULTIPLY': '%{BKY_MATH_ARITHMETIC_TOOLTIP_MULTIPLY}',
   'DIVIDE': '%{BKY_MATH_ARITHMETIC_TOOLTIP_DIVIDE}',
+    'NUMDIVIDE': '%{BKY_MATH_ARITHMETIC_TOOLTIP_NUM_DIVIDE}',
   'POWER': '%{BKY_MATH_ARITHMETIC_TOOLTIP_POWER}',
 
   // math_simple
@@ -399,7 +406,9 @@ Blockly.Constants.Math.TOOLTIPS_BY_OP = {
   'NEG': '%{BKY_MATH_SINGLE_TOOLTIP_NEG}',
   'LN': '%{BKY_MATH_SINGLE_TOOLTIP_LN}',
   'LOG10': '%{BKY_MATH_SINGLE_TOOLTIP_LOG10}',
+    'LOG1P':'%{BKY_MATH_SINGLE_TOOLTIP_LOG10}',
   'EXP': '%{BKY_MATH_SINGLE_TOOLTIP_EXP}',
+    'EXPM1':'%{BKY_MATH_SINGLE_TOOLTIP_EXP}',
   'POW10': '%{BKY_MATH_SINGLE_TOOLTIP_POW10}',
 
   // math_trig
@@ -409,9 +418,9 @@ Blockly.Constants.Math.TOOLTIPS_BY_OP = {
   'ASIN': '%{BKY_MATH_TRIG_TOOLTIP_ASIN}',
   'ACOS': '%{BKY_MATH_TRIG_TOOLTIP_ACOS}',
   'ATAN': '%{BKY_MATH_TRIG_TOOLTIP_ATAN}',
-
-  // math_on_lists
-  'SUM': '%{BKY_MATH_ONLIST_TOOLTIP_SUM}',
+    'ATAN2':'%{BKY_MATH_TRIG_TOOLTIP_ATAN2}',
+    'HYPOT':'%{BKY_MATH_TRIG_TOOLTIP_HYPOT}',
+    'SUM': '%{BKY_MATH_ONLIST_TOOLTIP_SUM}',
   'MIN': '%{BKY_MATH_ONLIST_TOOLTIP_MIN}',
   'MAX': '%{BKY_MATH_ONLIST_TOOLTIP_MAX}',
   'AVERAGE': '%{BKY_MATH_ONLIST_TOOLTIP_AVERAGE}',
@@ -441,7 +450,7 @@ Blockly.Constants.Math.IS_DIVISIBLEBY_MUTATOR_MIXIN = {
    */
   mutationToDom: function() {
     var container = document.createElement('mutation');
-    var divisorInput = (this.getFieldValue('PROPERTY') == 'DIVISIBLE_BY');
+    var divisorInput = ((this.getFieldValue('PROPERTY') === 'DIVISIBLE_BY')||(this.getFieldValue('OP') === 'ATAN2')||(this.getFieldValue('OP') === 'HYPOT'));
     container.setAttribute('divisor_input', divisorInput);
     return container;
   },
@@ -463,6 +472,7 @@ Blockly.Constants.Math.IS_DIVISIBLEBY_MUTATOR_MIXIN = {
   updateShape_: function(divisorInput) {
     // Add or remove a Value Input.
     var inputExists = this.getInput('DIVISOR');
+   // console.log(inputExists);
     if (divisorInput) {
       if (!inputExists) {
         this.appendValueInput('DIVISOR')
@@ -482,8 +492,15 @@ Blockly.Constants.Math.IS_DIVISIBLEBY_MUTATOR_MIXIN = {
  * @package
  */
 Blockly.Constants.Math.IS_DIVISIBLE_MUTATOR_EXTENSION = function() {
-  this.getField('PROPERTY').setValidator(function(option) {
-    var divisorInput = (option == 'DIVISIBLE_BY');
+  //console.log('mutator fired here');
+  var field_prop;
+  if(this.getField('PROPERTY')){
+    field_prop='PROPERTY';
+  }else{
+    field_prop='OP';
+  }
+  this.getField(field_prop).setValidator(function(option) {
+    var divisorInput = (option == 'DIVISIBLE_BY') || (option == 'ATAN2') || (option == 'HYPOT');
     this.sourceBlock_.updateShape_(divisorInput);
   });
 };

@@ -140,6 +140,7 @@ Blockly.Blocks['lists_create_with'] = {
     this.setHelpUrl(Blockly.Msg.LISTS_CREATE_WITH_HELPURL);
     this.setColour(Blockly.Blocks.lists.HUE);
     this.itemCount_ = 3;
+   // console.log("came inside init of list create with");
     this.updateShape_();
     this.setOutput(true, 'Array');
     this.setMutator(new Blockly.Mutator(['lists_create_with_item']));
@@ -232,18 +233,21 @@ Blockly.Blocks['lists_create_with'] = {
    * @this Blockly.Block
    */
   updateShape_: function() {
+   // console.log("this is updateshap ");
     if (this.itemCount_ && this.getInput('EMPTY')) {
       this.removeInput('EMPTY');
     } else if (!this.itemCount_ && !this.getInput('EMPTY')) {
       this.appendDummyInput('EMPTY')
-          .appendField(Blockly.Msg.LISTS_CREATE_EMPTY_TITLE);
+          .appendField(Blockly.Msg.LISTS_CREATE_EMPTY_TITLE,'VAR');
     }
     // Add new inputs.
     for (var i = 0; i < this.itemCount_; i++) {
       if (!this.getInput('ADD' + i)) {
         var input = this.appendValueInput('ADD' + i);
+       //   console.log("now i is 0");
         if (i == 0) {
-          input.appendField(Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH);
+
+          input.appendField(Blockly.Msg.LISTS_CREATE_WITH_ARRAY);
         }
       }
     }

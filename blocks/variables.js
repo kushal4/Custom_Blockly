@@ -34,7 +34,7 @@ goog.provide('Blockly.Constants.Variables');
 
 goog.require('Blockly.Blocks');
 goog.require('Blockly');
-
+var num_count;
 
 /**
  * Common HSV hue for all blocks in this category.
@@ -44,7 +44,9 @@ goog.require('Blockly');
 Blockly.Constants.Variables.HUE = 330;
 /** @deprecated Use Blockly.Constants.Variables.HUE */
 Blockly.Blocks.variables.HUE = Blockly.Constants.Variables.HUE;
-
+Blockly.Blocks.variables.num_arr_cnt=3;
+Blockly.Blocks.set_block_arr=[];
+Blockly.Blocks.set_block_arr_id=[];
 Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   // Block for variable getter.
   {
@@ -89,21 +91,78 @@ var var_set_json={
     "helpUrl": "%{BKY_VARIABLES_SET_HELPURL}",
     "extensions": ["contextMenu_variableSetterGetter"]
 }
+var num_block=0;
 Blockly.Blocks['variables_set']={
   init:function () {
       this.jsonInit(var_set_json);
+      var newState;
+      var ThisBlock=this;
+      this.getSvgRoot().addEventListener("click",function (ev) {
+          newState=ThisBlock.id;
+       console.log(ThisBlock.set_id);
+      });
+      this.set_id=newState;
+      console.log(this.set_id);
+    //  Blockly.Events.fire(new Blockly.Events.BlockChange(
+         // this.sourceBlock_, 'field', this.name, this.state_, newState));
+      //set_id=this.id;
+     // this.fetch_block_num=num_block;
+    ////  num_block++;
+      //console.log(this.fetch_block_num);
+   //  var isPresent= Blockly.Blocks.set_block_arr_id.indexOf(this.id);
+   //  console.log(isPresent);
+    // if(isPresent===-1){
+       //  Blockly.Blocks.set_block_arr_id.push(this.id);
+       //  console.log(this.id);
+    //}
   },
   onchange:function () {
+      if(Blockly.selected!=null){
+          console.log(Blockly.selected.id);
+         console.log(this.id);
+          var fetchBlock=workspace.getBlockById(Blockly.selected.id);
+         // if(fetchBlock.g)
 
-      if(this.getChildren()[0]){
-          console.log("parent set block changed");
-          num_count=this.getChildren()[0].inputList.length;
-          console.log(num_count);
+         // console.log(this);
+          if(fetchBlock!=null){
+              if(this.getChildren()[0]){
+                  //num_count=this.getChildren()[0].itemCount_;
+                  num_count=this.getChildren()[0].itemCount_;
+                  console.log(fetchBlock);
+              }
+
+              //console.log("parent set block changed");
+              //console.log(this.fetch_block_num-1);
+              //  console.log(Blockly.Blocks.set_block_arr_id[this.fetch_block_num-1]);
+              //console.log(workspace.getBlockById(Blockly.Blocks.set_block_arr_id[this.fetch_block_num-1]
+              // ));
+//if(this.id==Blockly.selected.id){
+    //console.log(num_count);
+
+//}
+              // this.num_arr_cnt=this.itemCount_;
+              //var idExists=
+
+
+              //  console.log(this.id);
+              //  console.log( this.getChildren());
+              // console.log(Blockly.selected_);
+          }
       }
 
+      //console.log(this.);
+   //  this.select();
+      //console.log(set_id);
+     //
+     // console.log(fetchBlock);
+
+
+  },
+  onselect:function () {
+      console.log("select fired");
   }
-}
-var num_count;
+};
+
 var arr_Json=
     {
          "arr_count":"3",
@@ -127,7 +186,7 @@ var arr_Json=
         */
         "colour": "%{BKY_VARIABLES_HUE}",
         "extensions": ["contextMenu_variableSetterGetter"]
-    }
+    };
 function dynam() {
     var options = [];
     //console.log(this.type);
@@ -153,7 +212,7 @@ Blockly.Blocks['variables_arr'] = {
       //var dyn_options=[];
      //this.arrcount_=3;
 //console.log(this.count_arr);
-      num_count=this.count_arr;
+    //  num_count=Blockly.Blocks.variables.num_arr_cnt;
       var dyn_options=[
        ['0','0'],
         ['1','1']
@@ -175,6 +234,8 @@ Blockly.Blocks['variables_arr'] = {
     onchange:function(){
     // ThisBlock=this;
    // this.arr=4;
+        //if(Blockly.Blocks.set_block_arr.find())
+       // Blockly.Blocks.set_block_arr.push(this.id,this.getChildren()[0].itemCount_)
         //num_count=
     /*if(this.getField('VAR_ARR')){
         this.getField('VAR_ARR').setValidator(function(option) {
@@ -200,14 +261,15 @@ Blockly.Blocks['variables_arr'] = {
     dynamicOptions:function () {
 //console.log(val);
         var options = [];
-        console.log(this.count_arr);
+       // console.log(Blockly.Blocks.variables.num_arr_cnt);
        // var now = Date.now();
+        console.log(num_count);
         for (var idx = 0; idx < num_count; idx++) {
             //options.push([String(new Date(now)).substring(0, 3), 'DAY' + i]);
             //now += 24 * 60 * 60 * 1000;
             options.push([String(idx),String(idx)]);
         }
-        console.log(this);
+        //console.log(this);
 
         //console.log(options);
         return options;
@@ -255,7 +317,6 @@ Blockly.Constants.Variables.CUSTOM_CONTEXT_MENU_VARIABLE_GETTER_SETTER_MIXIN = {
               option1.text = contextMenuArrMsg.replace('%1', name);
               var xmlField = goog.dom.createDom('field', null, name);
               xmlField.setAttribute('name', 'VAR');
-              //
               var xmlBlock = goog.dom.createDom('block', null, xmlField);
               xmlBlock.setAttribute('type', 'variables_arr');
               option1.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
