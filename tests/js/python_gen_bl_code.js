@@ -13,35 +13,6 @@ setTimeout(function () {
        // console.log("this is change");
     }
 
-    Blockly.Python['math_representation']=function (block) {
-        //var math_func=Blockly.Python.variableDB_.getName(block.getFieldValue('math_rep_drdwn')
-        // ,Blockly.VARIABLE_CATEGORY_NAME);
-        //  var code="Math."+math_func+"()";
-        //console.log(block);
-        var code="";
-        // console.log(block);
-        var condtioner_func=block.getFieldValue('math_dropdwn');
-        if(condtioner_func === 'FMOD'||condtioner_func ==='COPYSIGN'||
-            condtioner_func ==="LDEXP" || condtioner_func=== "POW"||condtioner_func=== "GCD"){
-            var argument0 = Blockly.Python.valueToCode(block, 'A', 6) || '0';
-            var argument1 = Blockly.Python.valueToCode(block, 'sense_B', 6) || '0';
-            //console.log(argument0);
-            //console.log(argument1);
-            code="math."+condtioner_func.toLowerCase()+"("+argument0
-                +","+argument1+")";
-
-        }else{
-            // var tuple = OPERATORS[block.getFieldValue('math_dropdwn')];
-            // var operator = tuple[0];
-            // var order = tuple[1];
-            var argument0 = Blockly.Python.valueToCode(block, 'A', 6) || '0';
-            // console.log(argument0);
-            code="math."+condtioner_func.toLowerCase()+"("+argument0
-                +")";
-        }
-        //console.log(condtioner_func);
-        return [code, Blockly.Python.ORDER_FUNCTION_CALL];
-    };
 
     Blockly.Python['math_angular'] = function (block) {
         var angular_func=block.getFieldValue('math_ang_drpdwn');

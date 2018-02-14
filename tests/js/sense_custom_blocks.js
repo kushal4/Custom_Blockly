@@ -15,12 +15,22 @@ $(document).ready(function () {
      //   console.log("updated");
    // }
 //};
+
+
+
+/*
+
     Blockly.Blocks['math_representation']={
         init: function() {
-            var math_rep_type= [["floor","FLOOR"],
+            var math_rep_type= [
+                ["floor","FLOOR"],
                 ["ciel","CIEL"],
                 ["factorial","FACTORIAL"],
                 ["copysign","COPYSIGN"],
+                ["erf","ERF"],
+                ["erfc","ERFC"],
+                ["gamma","GAMMA"],
+                ["lgamma","LGAMMA"],
                 ["fmod","FMOD"],
                 ["frexp","FREXP"],
                 ["isnan","ISNAN"],
@@ -28,7 +38,9 @@ $(document).ready(function () {
                 ["ldexp","LDEXP"],
                 ["pow","POW"],
                 ["gcd","GCD"],
-             ["trunc","TRUNC"]];
+                ["isclose","ISCLOSE"],
+             ["trunc","TRUNC"]
+            ];
             this.appendValueInput("A")
                 .appendField(new Blockly.FieldDropdown(math_rep_type), 'math_dropdwn');
            // var thisBlock=this;
@@ -41,7 +53,7 @@ $(document).ready(function () {
             var thisBlock=this;
             this.getField('math_dropdwn').setValidator(function(option) {
 //this.sourceBlock_.update();
-                var check_op_inp = ((option === 'FMOD'||option ==='COPYSIGN'||option=== 'POW'||option=== 'GCD'));
+                var check_op_inp = ((option === 'FMOD'||option ==='COPYSIGN'||option=== 'POW'||option=== 'GCD' || option==='ISCLOSE'));
              //   console.log(option);
                // this.sourceBlock_.updateShape_(divisorInput);
                 var inputExists = thisBlock.getInput('sense_B');
@@ -68,6 +80,45 @@ $(document).ready(function () {
         }
 
     };
+    */
+   // Blockly.defineBlocksWithJsonArray([
+
+      //  ]);
+   /* Blockly.Blocks['math_random']={
+        init:function () {
+            var math_rndm_type=[
+                ["shuffle","SHUFFLE"],
+                ["uniform","UNIFORM"],
+                ["triangular","TRIANGULAR"],
+                ["betavariate","BETAVARIATE"],
+                ["expovariate","EXPOVARIATE"],
+                ["gammavariate","GAMMAVARIATE"],
+                ["gauss","GAUSS"],
+                ["lognormvariate","LOGNORMVARIATE"],
+                ["normalvariate","NORMALVARIATE"],
+                ["vonmisesvariate","VONMISESVARIATE"],
+                ["paretovariate","PARETOVARIATE"],
+                ["weibullvariate","WEIBULLVARIATE"]
+            ]
+            this.appendDummyInput("A")
+                .appendField(new Blockly.FieldDropdown(math_rndm_type), 'math_dropdwn');
+            this.setOutput(true,'Number');
+            this.setColour(230);
+           // this.setMutator('random_arg_mutator');
+        }
+
+    };
+    */
+
+    /**
+     * mixing based on random api functions with variable number of function arguments
+     *
+     * @mixin
+     * @augments Blockly.Block
+     * @package
+     */
+
+
     Blockly.Blocks['math_angular']={
         init: function() {
           var math_angular_type=[
@@ -122,49 +173,6 @@ $(document).ready(function () {
             //this.setHelpUrl('http://www.example.com/');
         }
     };
-         Blockly.Blocks['require_file'] = {
-                init: function () {
-                    //Require_block=this;
-                    this.appendValueInput("Req")
-                        .setCheck(null)
-                        .appendField("Require", "res");
-                    this.setInputsInline(false);
-                    this.setOutput(true, 'Number');
-                    this.setColour(65);
-                     this.setTooltip('dsgsdgsd');
-                    //this.setHelpUrl('http://www.example.com/');
-                }
-            };
-
-    //Require_block = Blockly.Blocks['require_file'];
-    Blockly.Python['require_file'] = function (block) {
-        // String or array length.
-        var argument0 = Blockly.JavaScript.valueToCode(block, 'VALUE',
-            Blockly.JavaScript.ORDER_FUNCTION_CALL) || '\'\'';
-        return [argument0 + '.length', Blockly.JavaScript.ORDER_MEMBER];
-    };
-
-    /* Blockly.Blocks['custom_input_channel'] = {
-          init: function () {
-              file_block = this;
-              this.appendDummyInput("custom_block").appendField("Input_channel", "paho_chan");
-              this.setColour(120);
-              this.setTooltip('');
-              this.setHelpUrl('http://www.example.com/');
-          }
-      };
-  */
-   /* Blockly.Blocks['file_name'] = {
-        init: function () {
-            file_block = this;
-            this.appendCustomInput("custom_block").appendField(new Blockly.FieldTextInput("<    >"), "CUstom_NAME");
-            this.setOutput(true, null);
-            this.setColour(120);
-            this.setTooltip('');
-            this.setHelpUrl('http://www.example.com/');
-        }
-    };
-*/
    Blockly.Blocks['conditioner'] = {
        init : function () {
            var options = [['max', 'Max'], ['min', 'Min'],['floor','Floor'],['ceil','Ceil'],['sin','Sin'],['cos','Cos'],['tan','Tan']];

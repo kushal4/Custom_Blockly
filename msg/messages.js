@@ -391,6 +391,20 @@ Blockly.Msg.MATH_TRIG_ATAN = 'atan';
 Blockly.Msg.MATH_TRIG_ATAN2= 'atan2';
 Blockly.Msg.MATH_TRIG_HYPOT= 'hypot';
 
+
+Blockly.Msg.MATH_RAND_SHUFFLE='shuffle';
+Blockly.Msg.MATH_RAND_UNIFORM='uniform';
+Blockly.Msg.MATH_RAND_TRIANGULAR='triangular';
+Blockly.Msg.MATH_RAND_BETAVARIATE='betavariate';
+Blockly.Msg.MATH_RAND_EXPOVARIATE='expovariate';
+Blockly.Msg.MATH_RAND_GAMMAVARIATE='gammavariate';
+Blockly.Msg.MATH_RAND_GAUSS='gauss';
+Blockly.Msg.MATH_RAND_LOGNORMVARIATE='lognormvariate';
+Blockly.Msg.MATH_RAND_NORMALVARIATE='normalvariate';
+Blockly.Msg.MATH_RAND_VONMISESVARIATE='vonmisesvariate';
+Blockly.Msg.MATH_RAND_PARETOVARIATE='paretovariate';
+Blockly.Msg.MATH_RAND_WEIBULLVARIATE='weibullvariate';
+
 /// url - Information about addition, subtraction, multiplication, division, and exponentiation.
 Blockly.Msg.MATH_ARITHMETIC_HELPURL = 'https://en.wikipedia.org/wiki/Arithmetic';
 /// tooltip - See [https://en.wikipedia.org/wiki/Addition https://en.wikipedia.org/wiki/Addition].
@@ -493,6 +507,26 @@ Blockly.Msg.MATH_ROUND_OPERATOR_ROUND = 'round';
 Blockly.Msg.MATH_ROUND_OPERATOR_ROUNDUP = 'round up';
 /// dropdown - This rounds its input down to the nearest whole number.  For example, if the input was 3.8, the result would be 3.
 Blockly.Msg.MATH_ROUND_OPERATOR_ROUNDDOWN = 'round down';
+
+
+Blockly.Msg.MATH_OPERATOR_FLOOR="floor";
+Blockly.Msg.MATH_OPERATOR_CIEL="ciel";
+Blockly.Msg.MATH_OPERATOR_FACTORIAL="factorial";
+Blockly.Msg.MATH_OPERATOR_COPYSIGN="copysign";
+Blockly.Msg.MATH_OPERATOR_ERF="erf";
+Blockly.Msg.MATH_OPERATOR_ERFC="erfc";
+Blockly.Msg.MATH_OPERATOR_GAMMA="gamma";
+Blockly.Msg.MATH_OPERATOR_LGAMMA="lgamma";
+Blockly.Msg.MATH_OPERATOR_FMOD="fmod";
+Blockly.Msg.MATH_OPERATOR_FREXP="frexp";
+Blockly.Msg.MATH_OPERATOR_ISNAN="isnan";
+Blockly.Msg.MATH_OPERATOR_ISINF="isinf";
+Blockly.Msg.MATH_OPERATOR_LDEXP="ldexp";
+Blockly.Msg.MATH_OPERATOR_POW="pow";
+Blockly.Msg.MATH_OPERATOR_GCD="gcd";
+Blockly.Msg.MATH_OPERATOR_ISCLOSE="isclose";
+Blockly.Msg.MATH_OPERATOR_TRUNC="trunc";
+
 
 /// url - Information about applying a function to a list of numbers.  (We were unable to find such information in English.  Feel free to skip this and any other URLs that are difficult.)
 Blockly.Msg.MATH_ONLIST_HELPURL = '';

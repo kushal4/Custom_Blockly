@@ -216,6 +216,13 @@
                 </shadow>
             </value>
         </block>
+        <block type="math_random">
+            <value name="A">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
         <block type="math_single">
             <value name="NUM">
                 <shadow type="math_number">

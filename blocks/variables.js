@@ -99,10 +99,10 @@ Blockly.Blocks['variables_set']={
       var ThisBlock=this;
       this.getSvgRoot().addEventListener("click",function (ev) {
           newState=ThisBlock.id;
-       console.log(ThisBlock.set_id);
+    //   console.log(ThisBlock.set_id);
       });
       this.set_id=newState;
-      console.log(this.set_id);
+      //console.log(this.set_id);
     //  Blockly.Events.fire(new Blockly.Events.BlockChange(
          // this.sourceBlock_, 'field', this.name, this.state_, newState));
       //set_id=this.id;
@@ -118,8 +118,8 @@ Blockly.Blocks['variables_set']={
   },
   onchange:function () {
       if(Blockly.selected!=null){
-          console.log(Blockly.selected.id);
-         console.log(this.id);
+         // console.log(Blockly.selected.id);
+        // console.log(this.id);
           var fetchBlock=workspace.getBlockById(Blockly.selected.id);
          // if(fetchBlock.g)
 
@@ -128,7 +128,7 @@ Blockly.Blocks['variables_set']={
               if(this.getChildren()[0]){
                   //num_count=this.getChildren()[0].itemCount_;
                   num_count=this.getChildren()[0].itemCount_;
-                  console.log(fetchBlock);
+                 // console.log(fetchBlock);
               }
 
               //console.log("parent set block changed");

@@ -406,3 +406,66 @@ Blockly.Python['math_random_float'] = function(block) {
   Blockly.Python.definitions_['import_random'] = 'import random';
   return ['random.random()', Blockly.Python.ORDER_FUNCTION_CALL];
 };
+
+Blockly.Python['math_random']=function(block){
+    Blockly.Python.definitions_['import_random']='import random';
+    var code;
+    var rand_func=block.getFieldValue('PROPERTY');
+
+    var argument0=  Blockly.Python.valueToCode(block, 'A',
+        Blockly.Python.ORDER_NONE) || '0';
+    var argument1=  Blockly.Python.valueToCode(block, 'TWO_ARG_BLOCK',
+        Blockly.Python.ORDER_NONE) || '0';
+    var argument2=Blockly.Python.valueToCode(block, 'THREE_ARG_BLOCK',
+        Blockly.Python.ORDER_NONE) || '0';
+    var two_arg_func=["UNIFORM","BETAVARIATE","GAMMAVARIATE","GAUSS",
+        "LOGNORMVARIATE","NORMALVARIATE","VONMISESVARIATE","WEIBULLVARIATE"];
+    if(two_arg_func.includes(rand_func)){
+       // var argument1=  Blockly.Python.valueToCode(block, 'TWO_ARG_BLOCK',
+       //     Blockly.Python.ORDER_NONE) || '0';
+       //console.log(rand_func=="");
+     //   var argument1=block.getFieldValue('TWO_ARG_BLOCK');
+        code='random.'+rand_func.toLowerCase()+"("+argument0+","+argument1+")";
+
+    }else if(rand_func==="TRIANGULAR"){
+      //  var argument1=  Blockly.Python.valueToCode(block, 'TWO_ARG_BLOCK',
+
+        code='random.'+rand_func.toLowerCase()+"("+argument0+","+argument1+","+argument2+")";
+    }else{
+        code='random.'+rand_func.toLowerCase()+"("+argument0+")";
+    }
+   // console.log(code);
+    return [code, Blockly.Python.ORDER_FUNCTION_CALL];
+};
+
+Blockly.Python['math_representation']=function (block) {
+    //var math_func=Blockly.Python.variableDB_.getName(block.getFieldValue('math_rep_drdwn')
+    // ,Blockly.VARIABLE_CATEGORY_NAME);
+    //  var code="Math."+math_func+"()";
+    //console.log(block);
+    Blockly.Python.definitions_['import_math'] = 'import math';
+    var code="";
+    // console.log(block);
+    var condtioner_func=block.getFieldValue('PROPERTY');
+    var two_arg_val_arr=["FMOD"
+        ,"COPYSIGN","POW","GCD","ISCLOSE"];
+    if(two_arg_val_arr.includes(condtioner_func)){
+        var argument0 = Blockly.Python.valueToCode(block, 'A', 6) || '0';
+        var argument1 = Blockly.Python.valueToCode(block, 'sense_B', 6) || '0';
+        //console.log(argument0);
+        //console.log(argument1);
+        code="math."+condtioner_func.toLowerCase()+"("+argument0
+            +","+argument1+")";
+
+    }else{
+        // var tuple = OPERATORS[block.getFieldValue('math_dropdwn')];
+        // var operator = tuple[0];
+        // var order = tuple[1];
+        var argument0 = Blockly.Python.valueToCode(block, 'A', 6) || '0';
+        // console.log(argument0);
+        code="math."+condtioner_func.toLowerCase()+"("+argument0
+            +")";
+    }
+    //console.log(condtioner_func);
+    return [code, Blockly.Python.ORDER_FUNCTION_CALL];
+};
